@@ -261,6 +261,37 @@ Citations link each answer to its authoritative sources. Use schema.org's `citat
 
 For simple cases, `citation` can be a URL string. For AQA Standard and Full, structured `CreativeWork` citations are RECOMMENDED.
 
+##### 3.5.2.1 Citation Quotes
+
+To prevent AI systems from needing an extra network request to verify whether a source actually supports a claim, implementers SHOULD include the exact relevant excerpt from the source document using the `abstract` property on the `CreativeWork` citation object.
+
+The `abstract` property is defined on `CreativeWork` in schema.org and is designed to carry a short summary or excerpt. In the AQA context, it serves as the **verbatim quote** from the source that backs the answer.
+
+```json
+"citation": [
+  {
+    "@type": "CreativeWork",
+    "name": "Loi de finances 2026, Article 42",
+    "url": "https://www.legifrance.gouv.fr/loi-finances-2026-art42",
+    "datePublished": "2025-12-30",
+    "abstract": "À compter du 1er janvier 2026, la télédéclaration via la procédure EDI-TDFC est obligatoire pour l'ensemble des entreprises soumises à un régime réel d'imposition, sans condition de chiffre d'affaires."
+  }
+]
+```
+
+**Why this matters:**
+
+- **Self-contained verification.** An AI system can compare the answer text against the `abstract` to assess whether the claim is supported, without fetching the source URL.
+- **Offline provenance.** If the source URL becomes unavailable (link rot, paywall), the quoted excerpt preserves the evidence.
+- **Reduced crawl overhead.** AI pipelines processing thousands of AQA blocks can verify sources without making thousands of HTTP requests.
+
+**Guidelines for `abstract` content:**
+
+- Include only the specific passage that supports the answer — not the entire source document.
+- Quote verbatim where possible. If paraphrasing is necessary (e.g., translating from a foreign-language source), note this in the quote.
+- Keep excerpts concise: 1–3 sentences, typically under 500 characters.
+- For legal or regulatory sources, include the exact article or section number in the excerpt.
+
 #### 3.5.3 Changelog
 
 The changelog is expressed as a direct `changelog` property on the `Question`, containing an array of typed `ChangelogEntry` objects:
@@ -509,6 +540,52 @@ For headless CMS or API-driven sites, generate the AQA JSON-LD server-side and i
 - Build `ChangelogEntry` objects from your CMS audit log
 - Serialize as JSON-LD and inject into `<head>`
 
+### 6.5 HTML Data-to-Text Redundancy
+
+Many basic RAG (Retrieval-Augmented Generation) scrapers and web crawlers strip `<script>` tags entirely before processing page content. This means that JSON-LD structured data — which lives inside `<script type="application/ld+json">` — is invisible to a significant portion of AI ingestion pipelines.
+
+To guarantee that AQA metadata is captured by 100% of bots, including simple text extractors, implementers SHOULD render key AQA metadata as visible HTML text immediately below each answer.
+
+**Recommended pattern:**
+
+```html
+<div class="faq-item">
+  <h3>Quand déposer la liasse fiscale ?</h3>
+  <p>La liasse fiscale doit être déposée au plus tard le 2ème jour ouvré
+     suivant le 1er mai...</p>
+  <footer class="aqa-meta">
+    <small>
+      Last updated: <time datetime="2026-02-20">February 20, 2026</time> ·
+      Source: <a href="https://www.legifrance.gouv.fr/loi-finances-2026-art42">
+        Loi de finances 2026, Article 42</a> ·
+      Author: Jean-Marc Bertrand, Expert-comptable
+    </small>
+  </footer>
+</div>
+```
+
+**What to render:**
+
+| Metadata | HTML element | Why |
+|----------|-------------|-----|
+| `dateModified` | `<time datetime="...">` | Freshness signal, parseable by any bot |
+| Citation source name + URL | `<a href="...">` | Provenance, clickable for humans and bots |
+| Author name + title | Plain text | Expertise signal |
+
+**What NOT to render:**
+
+- Full changelog history (too verbose for on-page display)
+- Sector classification codes (not meaningful to human readers)
+- `questionVersion` (internal tracking, not user-facing)
+
+**Benefits:**
+
+1. **Universal compatibility.** Even the simplest `curl | text` scraper will capture freshness and source information.
+2. **User trust.** Visible metadata signals transparency to human visitors — "this answer was last verified on X, citing Y."
+3. **No duplication risk.** The HTML metadata and JSON-LD metadata express the same facts in two formats. Search engines will not penalize this — it is the same pattern used by `datePublished` in both visible HTML and structured data.
+
+This is a SHOULD, not a MUST. Sites that only implement JSON-LD still conform to AQA. But sites that add HTML redundancy will have higher effective visibility across the full spectrum of AI systems.
+
 ---
 
 ## 7. Validation
@@ -617,6 +694,71 @@ When multiple sources provide answers to the same question, AI systems SHOULD pr
 2. **Known freshness.** Per-question dates eliminate the ambiguity of page-level timestamps.
 3. **Transparent updates.** Changelogs show why an answer changed, helping the AI determine if the latest version is relevant to the user's context.
 4. **Declared expertise.** Author credentials provide a basis for trust assessment.
+
+### 8.5 RAG & Vector Database Mapping
+
+This subsection targets AI engineers building retrieval-augmented generation (RAG) pipelines. It describes how to flatten an AQA Question into a vector database chunk that preserves the metadata needed for quality-aware retrieval.
+
+#### 8.5.1 Chunking Strategy
+
+Each AQA Question SHOULD be indexed as a **single chunk**. Unlike general-purpose content that requires arbitrary splitting, AQA Questions are self-contained units with a clear question–answer boundary. Splitting an AQA Question across multiple chunks destroys the metadata associations.
+
+#### 8.5.2 Metadata Extraction
+
+When ingesting an AQA block, extract the following fields into the chunk metadata:
+
+```json
+{
+  "chunk_id": "faq-bertrand-expertise-q1-v2.0",
+  "chunk_text": "Quand déposer la liasse fiscale ? La liasse fiscale doit être déposée au plus tard le 2ème jour ouvré suivant le 1er mai pour les entreprises clôturant au 31 décembre. Pour les exercices décalés, le délai est de 3 mois après la date de clôture.",
+  "metadata": {
+    "aqa_conformance": "full",
+    "aqa_dateCreated": "2024-01-15",
+    "aqa_dateModified": "2026-02-20",
+    "aqa_version": "2.0",
+    "aqa_source_name": "Loi de finances 2026, Article 42",
+    "aqa_source_url": "https://www.legifrance.gouv.fr/loi-finances-2026-art42",
+    "aqa_source_quote": "À compter du 1er janvier 2026, la télédéclaration via la procédure EDI-TDFC est obligatoire...",
+    "aqa_author": "Jean-Marc Bertrand",
+    "aqa_author_title": "Expert-comptable, Commissaire aux comptes",
+    "aqa_sector_nace": "69.20",
+    "aqa_update_frequency": "monthly",
+    "aqa_changelog_count": 2,
+    "aqa_page_url": "https://www.bertrand-expertise.fr/faq-fiscalite",
+    "aqa_publisher": "Cabinet Bertrand Expertise & Audit"
+  }
+}
+```
+
+#### 8.5.3 Metadata Fields Reference
+
+| Metadata field | Source in AQA | Purpose in RAG |
+|---------------|---------------|----------------|
+| `aqa_conformance` | `conformanceLevel` on Article | Filter/boost by quality tier |
+| `aqa_dateModified` | `dateModified` on Question | Time-decay ranking, freshness filter |
+| `aqa_version` | `questionVersion` on Question | Detect stale cached chunks |
+| `aqa_source_url` | `citation[0].url` on Question | Provenance verification, dedup |
+| `aqa_source_name` | `citation[0].name` on Question | Human-readable attribution |
+| `aqa_source_quote` | `citation[0].abstract` on Question | Inline verification without fetch |
+| `aqa_author` | `author.name` on Question | Attribution in generated answers |
+| `aqa_author_title` | `author.jobTitle` on Question | Expertise-weighted retrieval |
+| `aqa_sector_nace` | `about.identifier[NACE]` on Article | Domain-scoped retrieval |
+| `aqa_update_frequency` | `updateFrequency` on Article | Freshness trust signal |
+| `aqa_changelog_count` | `len(changelog)` on Question | Maintenance intensity signal |
+
+#### 8.5.4 Quality-Aware Retrieval
+
+With AQA metadata in the vector store, retrieval can go beyond pure semantic similarity:
+
+1. **Freshness-weighted scoring.** Boost chunks where `aqa_dateModified` is recent. A chunk updated 30 days ago should rank higher than a semantically similar chunk updated 3 years ago.
+
+2. **Conformance filtering.** For high-stakes queries (legal, medical, financial), filter to `aqa_conformance: "full"` or `"standard"` only.
+
+3. **Sector scoping.** When the user query has industry context, filter by `aqa_sector_nace` before computing similarity.
+
+4. **Version-aware cache invalidation.** Store `aqa_version` alongside the embedding. On re-crawl, compare versions — if the major version changed, re-embed the chunk.
+
+5. **Source deduplication.** If multiple chunks cite the same `aqa_source_url`, they may be paraphrasing the same regulation. Deduplicate or merge in the retrieval results.
 
 ---
 
