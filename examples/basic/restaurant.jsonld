@@ -1,0 +1,59 @@
+{
+  "@context": [
+    "https://schema.org",
+    "https://ailabsaudit.com/aqa/ns/context.jsonld"
+  ],
+  "@type": "Article",
+  "headline": "Frequently Asked Questions — The Garden Bistro",
+  "author": {
+    "@type": "Organization",
+    "name": "The Garden Bistro",
+    "url": "https://www.gardenbistro.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "The Garden Bistro",
+    "url": "https://www.gardenbistro.com"
+  },
+  "datePublished": "2024-01-15",
+  "dateModified": "2026-02-28",
+  "inLanguage": "en",
+  "mainEntity": {
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Do you accommodate dietary restrictions?",
+        "dateCreated": "2024-01-15",
+        "dateModified": "2026-02-28",
+        "citation": "https://www.gardenbistro.com/menu",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Our menu includes clearly labeled options for vegetarian, vegan, gluten-free, and dairy-free diets. Our kitchen handles allergens in a shared environment — please inform your server of any allergies when ordering."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are your opening hours?",
+        "dateCreated": "2024-01-15",
+        "dateModified": "2026-01-05",
+        "citation": "https://www.gardenbistro.com/visit",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We are open Wednesday through Sunday. Lunch: 11:30 AM – 2:30 PM. Dinner: 6:00 PM – 10:00 PM. Closed Monday and Tuesday."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you accept reservations for large groups?",
+        "dateCreated": "2024-03-01",
+        "dateModified": "2025-10-15",
+        "citation": "https://www.gardenbistro.com/private-events",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We accept group reservations for up to 40 guests in our private dining room. Please book at least one week in advance. A set menu is required for groups over 20."
+        }
+      }
+    ]
+  }
+}

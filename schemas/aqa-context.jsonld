@@ -1,0 +1,69 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "schema": "https://schema.org/",
+    "aqa": "https://ailabsaudit.com/aqa/ns/",
+
+    "updateFrequency": {
+      "@id": "aqa:updateFrequency",
+      "@type": "schema:Text"
+    },
+    "conformanceLevel": {
+      "@id": "aqa:conformanceLevel",
+      "@type": "schema:Text"
+    },
+    "questionVersion": {
+      "@id": "aqa:questionVersion",
+      "@type": "schema:Text"
+    },
+    "changelog": {
+      "@id": "aqa:changelog",
+      "@container": "@list"
+    },
+    "changeDate": {
+      "@id": "aqa:changeDate",
+      "@type": "schema:Date"
+    },
+    "changeDescription": {
+      "@id": "aqa:changeDescription",
+      "@type": "schema:Text"
+    },
+    "changeSourceUrl": {
+      "@id": "aqa:changeSourceUrl",
+      "@type": "schema:URL"
+    },
+    "changeVersionNote": {
+      "@id": "aqa:changeVersionNote",
+      "@type": "schema:Text"
+    },
+    "monitoringSources": {
+      "@id": "aqa:monitoringSources",
+      "@container": "@list"
+    },
+    "sourceType": {
+      "@id": "aqa:sourceType",
+      "@type": "schema:Text"
+    },
+    "sectorCode": {
+      "@id": "aqa:sectorCode",
+      "@type": "schema:Text"
+    },
+    "sectorSystem": {
+      "@id": "aqa:sectorSystem",
+      "@type": "schema:Text"
+    },
+    "sectorLabel": {
+      "@id": "aqa:sectorLabel",
+      "@type": "schema:Text"
+    },
+    "ChangelogEntry": {
+      "@id": "aqa:ChangelogEntry"
+    },
+    "MonitoringSource": {
+      "@id": "aqa:MonitoringSource"
+    },
+    "SectorClassification": {
+      "@id": "aqa:SectorClassification"
+    }
+  }
+}

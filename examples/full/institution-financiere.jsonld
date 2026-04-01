@@ -1,0 +1,237 @@
+{
+  "@context": [
+    "https://schema.org",
+    "https://ailabsaudit.com/aqa/ns/context.jsonld"
+  ],
+  "@type": "Article",
+  "headline": "Regulatory FAQ — Anti-Money Laundering Compliance",
+  "author": {
+    "@type": "Person",
+    "name": "Dr. Claire Moreau",
+    "jobTitle": "Chief Compliance Officer",
+    "url": "https://www.alpinebank.eu/team/claire-moreau",
+    "sameAs": "https://www.linkedin.com/in/clairemoreau-compliance",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "Alpine Bank Europe"
+    }
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Alpine Bank Europe",
+    "url": "https://www.alpinebank.eu",
+    "sameAs": "https://www.linkedin.com/company/alpinebank"
+  },
+  "datePublished": "2024-01-05",
+  "dateModified": "2026-03-28",
+  "inLanguage": "en",
+  "about": {
+    "@type": "Thing",
+    "name": "Banking — Anti-Money Laundering Compliance",
+    "identifier": [
+      {
+        "@type": "PropertyValue",
+        "propertyID": "NACE",
+        "value": "64.19"
+      },
+      {
+        "@type": "PropertyValue",
+        "propertyID": "SIC",
+        "value": "6022"
+      }
+    ]
+  },
+  "updateFrequency": "monthly",
+  "conformanceLevel": "full",
+  "monitoringSources": [
+    {
+      "@type": "MonitoringSource",
+      "name": "European Banking Authority — AML/CFT Publications",
+      "url": "https://www.eba.europa.eu/regulation-and-policy/anti-money-laundering-and-countering-financing-terrorism",
+      "sourceType": "regulatory"
+    },
+    {
+      "@type": "MonitoringSource",
+      "name": "FATF Recommendations & Mutual Evaluations",
+      "url": "https://www.fatf-gafi.org/en/publications.html",
+      "sourceType": "regulatory"
+    },
+    {
+      "@type": "MonitoringSource",
+      "name": "EU Official Journal — Financial Regulation",
+      "url": "https://eur-lex.europa.eu/oj/direct-access.html",
+      "sourceType": "government"
+    },
+    {
+      "@type": "MonitoringSource",
+      "name": "Compliance Week Newsletter",
+      "url": "https://www.complianceweek.com/rss",
+      "sourceType": "newsletter"
+    }
+  ],
+  "mainEntity": {
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What are the current Customer Due Diligence (CDD) requirements?",
+        "dateCreated": "2024-01-05",
+        "dateModified": "2026-03-28",
+        "questionVersion": "3.0",
+        "author": {
+          "@type": "Person",
+          "name": "Dr. Claire Moreau",
+          "jobTitle": "Chief Compliance Officer",
+          "sameAs": "https://www.linkedin.com/in/clairemoreau-compliance"
+        },
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "EU Anti-Money Laundering Regulation (AMLR) 2024/1624",
+            "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1624",
+            "datePublished": "2024-07-19"
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "EBA Guidelines on CDD — EBA/GL/2025/01",
+            "url": "https://www.eba.europa.eu/guidelines-cdd-2025",
+            "datePublished": "2025-03-15"
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under the EU Anti-Money Laundering Regulation (AMLR), financial institutions must perform Customer Due Diligence (CDD) that includes: (1) identifying and verifying the identity of the customer using reliable, independent sources; (2) identifying the beneficial owner and taking reasonable measures to verify their identity; (3) assessing and obtaining information on the purpose and intended nature of the business relationship; (4) conducting ongoing monitoring of the relationship and transactions. Enhanced Due Diligence (EDD) is required for high-risk situations, including politically exposed persons (PEPs), correspondent banking relationships, and transactions involving high-risk third countries."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-01-05",
+            "changeDescription": "Initial publication based on 4th and 5th Anti-Money Laundering Directives",
+            "changeSourceUrl": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32015L0849",
+            "changeVersionNote": "1.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-08-10",
+            "changeDescription": "Major update: new EU AMLR 2024/1624 adopted, replacing directive-based framework with directly applicable regulation",
+            "changeSourceUrl": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1624",
+            "changeVersionNote": "2.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2025-04-01",
+            "changeDescription": "Updated with EBA implementation guidelines on CDD procedures under the new AMLR",
+            "changeSourceUrl": "https://www.eba.europa.eu/guidelines-cdd-2025",
+            "changeVersionNote": "2.1"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2026-03-28",
+            "changeDescription": "Refactored to reflect AMLA (Authority for AML) operational guidelines effective Q1 2026",
+            "changeSourceUrl": "https://www.anti-money-laundering.eu/amla-guidelines-2026",
+            "changeVersionNote": "3.0"
+          }
+        ]
+      },
+      {
+        "@type": "Question",
+        "name": "What is the threshold for Suspicious Activity Reports (SARs)?",
+        "dateCreated": "2024-01-05",
+        "dateModified": "2026-02-10",
+        "questionVersion": "2.0",
+        "author": {
+          "@type": "Person",
+          "name": "Marc Keller",
+          "jobTitle": "Head of Financial Crime Prevention",
+          "sameAs": "https://www.linkedin.com/in/marckeller-fincrime",
+          "affiliation": {
+            "@type": "Organization",
+            "name": "Alpine Bank Europe"
+          }
+        },
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "AMLR Article 50 — Suspicious Transaction Reporting",
+            "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1624#art50",
+            "datePublished": "2024-07-19"
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There is no monetary threshold for filing a SAR. Obliged entities must report to their national Financial Intelligence Unit (FIU) whenever they know, suspect, or have reasonable grounds to suspect that funds are the proceeds of criminal activity or are related to terrorist financing — regardless of the amount involved. For cash transactions, the EU AMLR sets a reporting threshold of EUR 10,000 for occasional transactions. However, this threshold does not apply to the obligation to report suspicious activity, which is trigger-based, not threshold-based."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-01-05",
+            "changeDescription": "Initial publication covering SAR obligations under 4AMLD/5AMLD",
+            "changeSourceUrl": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32015L0849",
+            "changeVersionNote": "1.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2025-01-15",
+            "changeDescription": "Clarification on the distinction between suspicious activity reporting (no threshold) and large cash transaction reporting (EUR 10,000)",
+            "changeSourceUrl": "https://www.fatf-gafi.org/en/publications/fatfrecommendations.html",
+            "changeVersionNote": "1.1"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2026-02-10",
+            "changeDescription": "Rewritten to align with AMLR direct reporting framework replacing transposed directive obligations",
+            "changeSourceUrl": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1624#art50",
+            "changeVersionNote": "2.0"
+          }
+        ]
+      },
+      {
+        "@type": "Question",
+        "name": "How does the new AMLA affect our compliance obligations?",
+        "dateCreated": "2025-11-01",
+        "dateModified": "2026-03-15",
+        "questionVersion": "1.1",
+        "author": {
+          "@type": "Person",
+          "name": "Dr. Claire Moreau",
+          "jobTitle": "Chief Compliance Officer",
+          "sameAs": "https://www.linkedin.com/in/clairemoreau-compliance"
+        },
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "Regulation establishing AMLA — 2024/1620",
+            "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1620",
+            "datePublished": "2024-07-19"
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "AMLA Operational Guidelines — First Edition",
+            "url": "https://www.anti-money-laundering.eu/amla-operational-guidelines-2026",
+            "datePublished": "2026-01-15"
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Anti-Money Laundering Authority (AMLA), headquartered in Frankfurt, became operational in mid-2025. Key impacts: (1) AMLA directly supervises the highest-risk cross-border financial institutions — if selected, your institution will undergo joint supervisory teams and periodic reviews. (2) AMLA issues binding Regulatory Technical Standards (RTS) and guidelines that national supervisors must enforce. (3) AMLA coordinates FIU cooperation through the FIU.net system and can request joint analysis of cross-border cases. (4) Non-selected entities remain under national supervision but must comply with AMLA-issued standards. Alpine Bank is monitoring its potential selection status for the first round of direct supervision (expected announcement Q3 2026)."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2025-11-01",
+            "changeDescription": "New question added in anticipation of AMLA becoming operational",
+            "changeSourceUrl": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1620",
+            "changeVersionNote": "1.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2026-03-15",
+            "changeDescription": "Updated with AMLA's first operational guidelines published January 2026",
+            "changeSourceUrl": "https://www.anti-money-laundering.eu/amla-operational-guidelines-2026",
+            "changeVersionNote": "1.1"
+          }
+        ]
+      }
+    ]
+  }
+}

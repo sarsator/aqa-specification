@@ -1,0 +1,59 @@
+{
+  "@context": [
+    "https://schema.org",
+    "https://ailabsaudit.com/aqa/ns/context.jsonld"
+  ],
+  "@type": "Article",
+  "headline": "Questions fréquentes — Comptabilité PME",
+  "author": {
+    "@type": "Organization",
+    "name": "Cabinet Dupont Comptabilité",
+    "url": "https://www.dupont-compta.fr"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Cabinet Dupont Comptabilité",
+    "url": "https://www.dupont-compta.fr"
+  },
+  "datePublished": "2024-03-15",
+  "dateModified": "2026-03-10",
+  "inLanguage": "fr",
+  "mainEntity": {
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Quand déposer la liasse fiscale ?",
+        "dateCreated": "2024-03-15",
+        "dateModified": "2026-02-01",
+        "citation": "https://www.impots.gouv.fr/professionnel/calendrier-fiscal",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "La liasse fiscale doit être déposée au plus tard le 2ème jour ouvré suivant le 1er mai pour les entreprises dont l'exercice coïncide avec l'année civile. Pour les exercices décalés, le délai est de 3 mois après la clôture. Depuis la loi de finances 2026, les entreprises soumises à l'IS ayant un CA supérieur à 10M€ doivent déposer au format dématérialisé exclusivement."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quel est le taux d'IS pour les PME ?",
+        "dateCreated": "2024-03-15",
+        "dateModified": "2026-03-10",
+        "citation": "https://www.service-public.fr/professionnels-entreprises/vosdroits/F23575",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le taux réduit d'IS est de 15% pour les PME sur les 42 500 premiers euros de bénéfice (conditions : CA < 10M€, capital entièrement libéré et détenu à 75% par des personnes physiques). Au-delà, le taux normal de 25% s'applique."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Quels documents fournir pour la création d'entreprise ?",
+        "dateCreated": "2024-06-10",
+        "dateModified": "2025-11-20",
+        "citation": "https://www.infogreffe.fr/informations-et-dossiers-entreprises/dossiers-thematiques/creation-entreprise",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pour créer une SARL ou SAS, vous devez fournir : les statuts signés, l'attestation de dépôt des fonds, la déclaration de non-condamnation des dirigeants, un justificatif de domiciliation, et le formulaire M0 via le guichet unique de l'INPI."
+        }
+      }
+    ]
+  }
+}

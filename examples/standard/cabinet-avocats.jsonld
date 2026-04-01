@@ -1,0 +1,149 @@
+{
+  "@context": [
+    "https://schema.org",
+    "https://ailabsaudit.com/aqa/ns/context.jsonld"
+  ],
+  "@type": "Article",
+  "headline": "Droit du travail — Questions fréquentes",
+  "author": {
+    "@type": "Person",
+    "name": "Maître Sophie Laurent",
+    "url": "https://www.laurent-avocats.fr/equipe/sophie-laurent"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Cabinet Laurent & Associés",
+    "url": "https://www.laurent-avocats.fr"
+  },
+  "datePublished": "2024-01-10",
+  "dateModified": "2026-03-20",
+  "inLanguage": "fr",
+  "about": {
+    "@type": "Thing",
+    "name": "Activités juridiques — Droit du travail",
+    "identifier": [
+      {
+        "@type": "PropertyValue",
+        "propertyID": "NACE",
+        "value": "69.10"
+      },
+      {
+        "@type": "PropertyValue",
+        "propertyID": "NAF",
+        "value": "69.10Z"
+      }
+    ]
+  },
+  "updateFrequency": "monthly",
+  "conformanceLevel": "standard",
+  "mainEntity": {
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Quel est le délai de préavis en cas de licenciement ?",
+        "dateCreated": "2024-01-10",
+        "dateModified": "2026-02-15",
+        "questionVersion": "1.1",
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "Article L1234-1 du Code du travail",
+            "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901112",
+            "datePublished": "2024-01-01"
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le délai de préavis dépend de l'ancienneté du salarié : moins de 6 mois — selon la convention collective ou les usages ; de 6 mois à 2 ans — 1 mois minimum ; plus de 2 ans — 2 mois minimum. La convention collective applicable peut prévoir des durées plus favorables. En cas de faute grave ou lourde, le préavis n'est pas dû."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-01-10",
+            "changeDescription": "Publication initiale basée sur le Code du travail en vigueur",
+            "changeSourceUrl": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006901112",
+            "changeVersionNote": "1.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2026-02-15",
+            "changeDescription": "Précision ajoutée sur la faute grave et lourde suite à jurisprudence Cass. Soc. 2025",
+            "changeSourceUrl": "https://www.courdecassation.fr/decision/2025-soc-12345",
+            "changeVersionNote": "1.1"
+          }
+        ]
+      },
+      {
+        "@type": "Question",
+        "name": "Un employeur peut-il imposer des congés payés ?",
+        "dateCreated": "2024-03-05",
+        "dateModified": "2026-03-20",
+        "questionVersion": "2.0",
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "Articles L3141-13 à L3141-20 du Code du travail",
+            "url": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006072050/LEGISCTA000006195623",
+            "datePublished": "2024-01-01"
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui, l'employeur fixe l'ordre et les dates des départs en congés, après consultation du CSE. Il doit respecter un délai de prévenance d'au moins 1 mois. La période de prise du congé principal (minimum 12 jours consécutifs) est fixée entre le 1er mai et le 31 octobre, sauf accord collectif différent."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-03-05",
+            "changeDescription": "Publication initiale",
+            "changeSourceUrl": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006072050/LEGISCTA000006195623",
+            "changeVersionNote": "1.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2025-06-10",
+            "changeDescription": "Mise à jour suite à l'accord interprofessionnel 2025 sur les congés",
+            "changeSourceUrl": "https://www.legifrance.gouv.fr/accord-interpro-2025-conges",
+            "changeVersionNote": "1.1"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2026-03-20",
+            "changeDescription": "Refonte complète suite à la loi Travail 2026 modifiant le délai de prévenance",
+            "changeSourceUrl": "https://www.legifrance.gouv.fr/loi-travail-2026",
+            "changeVersionNote": "2.0"
+          }
+        ]
+      },
+      {
+        "@type": "Question",
+        "name": "Quelles sont les indemnités de licenciement légales ?",
+        "dateCreated": "2024-01-10",
+        "dateModified": "2025-09-01",
+        "questionVersion": "1.0",
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "Article R1234-2 du Code du travail",
+            "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000018537578",
+            "datePublished": "2024-01-01"
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "L'indemnité légale de licenciement est due au salarié ayant au moins 8 mois d'ancienneté ininterrompue. Son montant ne peut être inférieur à : 1/4 de mois de salaire par année d'ancienneté pour les 10 premières années, puis 1/3 de mois par année au-delà de 10 ans."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-01-10",
+            "changeDescription": "Publication initiale basée sur le barème légal en vigueur",
+            "changeSourceUrl": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000018537578",
+            "changeVersionNote": "1.0"
+          }
+        ]
+      }
+    ]
+  }
+}

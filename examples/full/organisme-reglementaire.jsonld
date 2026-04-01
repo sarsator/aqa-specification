@@ -1,0 +1,254 @@
+{
+  "@context": [
+    "https://schema.org",
+    "https://ailabsaudit.com/aqa/ns/context.jsonld"
+  ],
+  "@type": "Article",
+  "headline": "Fiscalité des entreprises — Questions fréquentes",
+  "author": {
+    "@type": "Person",
+    "name": "Jean-Marc Bertrand",
+    "jobTitle": "Expert-comptable, Commissaire aux comptes",
+    "url": "https://www.bertrand-expertise.fr/equipe/jm-bertrand",
+    "sameAs": "https://www.experts-comptables.fr/annuaire/jean-marc-bertrand",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "Cabinet Bertrand Expertise & Audit",
+      "url": "https://www.bertrand-expertise.fr"
+    }
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Cabinet Bertrand Expertise & Audit",
+    "url": "https://www.bertrand-expertise.fr",
+    "sameAs": "https://www.linkedin.com/company/bertrand-expertise"
+  },
+  "datePublished": "2024-01-15",
+  "dateModified": "2026-03-25",
+  "inLanguage": "fr",
+  "about": {
+    "@type": "Thing",
+    "name": "Expertise comptable — Fiscalité des entreprises",
+    "identifier": [
+      {
+        "@type": "PropertyValue",
+        "propertyID": "NACE",
+        "value": "69.20"
+      },
+      {
+        "@type": "PropertyValue",
+        "propertyID": "NAF",
+        "value": "69.20Z"
+      },
+      {
+        "@type": "PropertyValue",
+        "propertyID": "SIC",
+        "value": "7291"
+      }
+    ]
+  },
+  "updateFrequency": "monthly",
+  "conformanceLevel": "full",
+  "monitoringSources": [
+    {
+      "@type": "MonitoringSource",
+      "name": "Bulletin Officiel des Finances Publiques (BOFiP)",
+      "url": "https://bofip.impots.gouv.fr/bofip/1-PGP.html/LATEST",
+      "sourceType": "government"
+    },
+    {
+      "@type": "MonitoringSource",
+      "name": "Légifrance — Codes et lois fiscales",
+      "url": "https://www.legifrance.gouv.fr/codes/id/LEGITEXT000006069577/",
+      "sourceType": "regulatory"
+    },
+    {
+      "@type": "MonitoringSource",
+      "name": "Ordre des Experts-Comptables — Actualités fiscales",
+      "url": "https://www.experts-comptables.fr/actualites",
+      "sourceType": "professional_body"
+    },
+    {
+      "@type": "MonitoringSource",
+      "name": "Revue Fiduciaire — Veille fiscale",
+      "url": "https://revuefiduciaire.grouperf.com/feed/",
+      "sourceType": "rss"
+    }
+  ],
+  "mainEntity": {
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Quand déposer la liasse fiscale ?",
+        "dateCreated": "2024-01-15",
+        "dateModified": "2026-02-20",
+        "questionVersion": "2.0",
+        "author": {
+          "@type": "Person",
+          "name": "Jean-Marc Bertrand",
+          "jobTitle": "Expert-comptable, Commissaire aux comptes",
+          "sameAs": "https://www.experts-comptables.fr/annuaire/jean-marc-bertrand"
+        },
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "Article 175 du Code général des impôts",
+            "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006308271",
+            "datePublished": "2024-01-01"
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "Loi de finances 2026 — Article 42 (télédéclaration obligatoire élargie)",
+            "url": "https://www.legifrance.gouv.fr/loi-finances-2026-art42",
+            "datePublished": "2025-12-30"
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "La liasse fiscale (déclaration de résultats) doit être déposée au plus tard le 2ème jour ouvré suivant le 1er mai pour les entreprises clôturant au 31 décembre (soit généralement le 3 mai). Pour les exercices décalés, le délai est de 3 mois après la date de clôture. Depuis la loi de finances 2026, la télédéclaration via la procédure EDI-TDFC est désormais obligatoire pour TOUTES les entreprises soumises à un régime réel d'imposition, quelle que soit leur taille (suppression du seuil de CA). Le non-respect de la télédéclaration entraîne une majoration de 0,2% des droits dus, avec un minimum de 60€."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-01-15",
+            "changeDescription": "Publication initiale avec les règles de dépôt en vigueur (CGI art. 175)",
+            "changeSourceUrl": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006308271",
+            "changeVersionNote": "1.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2026-02-20",
+            "changeDescription": "Mise à jour majeure : la loi de finances 2026 rend la télédéclaration EDI-TDFC obligatoire pour toutes les entreprises au réel, suppression du seuil de CA. Ajout de la sanction de 0,2%.",
+            "changeSourceUrl": "https://www.legifrance.gouv.fr/loi-finances-2026-art42",
+            "changeVersionNote": "2.0"
+          }
+        ]
+      },
+      {
+        "@type": "Question",
+        "name": "Quel est le taux d'IS pour les PME ?",
+        "dateCreated": "2024-01-15",
+        "dateModified": "2026-03-25",
+        "questionVersion": "3.0",
+        "author": {
+          "@type": "Person",
+          "name": "Émilie Rousseau",
+          "jobTitle": "Fiscaliste senior",
+          "sameAs": "https://www.linkedin.com/in/emilierousseau-fiscaliste",
+          "affiliation": {
+            "@type": "Organization",
+            "name": "Cabinet Bertrand Expertise & Audit"
+          }
+        },
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "Article 219 du Code général des impôts — Taux de l'IS",
+            "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006303680",
+            "datePublished": "2024-01-01"
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "Loi de finances 2026 — Article 15 (relèvement du plafond du taux réduit)",
+            "url": "https://www.legifrance.gouv.fr/loi-finances-2026-art15",
+            "datePublished": "2025-12-30"
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "BOFiP — IS-LIQ-20-20 (taux réduit PME)",
+            "url": "https://bofip.impots.gouv.fr/bofip/IS-LIQ-20-20.html",
+            "datePublished": "2026-02-01"
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le taux d'IS pour les PME en 2026 s'articule en deux tranches : (1) Taux réduit de 15% sur les premiers 42 500€ de bénéfice (relevé à 50 000€ par la loi de finances 2026 pour les exercices ouverts à compter du 1er janvier 2026). Conditions : CA HT < 10M€, capital entièrement libéré et détenu à 75% minimum par des personnes physiques. (2) Taux normal de 25% au-delà. Attention : les entreprises membres d'un groupe fiscal au sens de l'article 223 A ne bénéficient pas du taux réduit si le groupe dépasse les seuils consolidés."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-01-15",
+            "changeDescription": "Publication initiale avec taux réduit PME à 15% sur 42 500€ (régime 2024)",
+            "changeSourceUrl": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006303680",
+            "changeVersionNote": "1.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2025-01-10",
+            "changeDescription": "Confirmation du maintien des taux pour 2025, ajout de la précision sur les groupes fiscaux art. 223 A",
+            "changeSourceUrl": "https://bofip.impots.gouv.fr/bofip/IS-LIQ-20-20.html",
+            "changeVersionNote": "2.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2026-03-25",
+            "changeDescription": "Mise à jour majeure : relèvement du plafond du taux réduit de 42 500€ à 50 000€ par la loi de finances 2026 (art. 15). Applicable aux exercices ouverts à compter du 01/01/2026.",
+            "changeSourceUrl": "https://www.legifrance.gouv.fr/loi-finances-2026-art15",
+            "changeVersionNote": "3.0"
+          }
+        ]
+      },
+      {
+        "@type": "Question",
+        "name": "Quelles sont les nouvelles obligations de facturation électronique ?",
+        "dateCreated": "2025-09-01",
+        "dateModified": "2026-03-10",
+        "questionVersion": "1.2",
+        "author": {
+          "@type": "Person",
+          "name": "Jean-Marc Bertrand",
+          "jobTitle": "Expert-comptable, Commissaire aux comptes",
+          "sameAs": "https://www.experts-comptables.fr/annuaire/jean-marc-bertrand"
+        },
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "Ordonnance n° 2021-1190 relative à la facturation électronique",
+            "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000044044228",
+            "datePublished": "2021-09-15"
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "Décret n° 2025-XXX fixant le calendrier définitif de la facturation électronique",
+            "url": "https://www.legifrance.gouv.fr/decret-facture-electronique-2025",
+            "datePublished": "2025-06-15"
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "BOFiP — TVA-DECLA-30-20-30 (facturation électronique)",
+            "url": "https://bofip.impots.gouv.fr/bofip/TVA-DECLA-30-20-30.html",
+            "datePublished": "2026-01-15"
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "La réforme de la facturation électronique entre en vigueur de manière progressive : (1) Septembre 2026 : obligation de RÉCEPTION des factures électroniques pour toutes les entreprises assujetties à la TVA, et obligation d'ÉMISSION pour les grandes entreprises et ETI. (2) Septembre 2027 : obligation d'ÉMISSION étendue aux PME et micro-entreprises. Les factures doivent transiter par une Plateforme de Dématérialisation Partenaire (PDP) immatriculée par l'administration, ou par le Portail Public de Facturation (PPF). Formats acceptés : Factur-X (PDF/A-3 avec XML embarqué), UBL, CII. Le e-reporting des transactions B2C et internationales est obligatoire selon le même calendrier."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2025-09-01",
+            "changeDescription": "Nouvelle question créée suite à la publication du calendrier définitif de la facturation électronique",
+            "changeSourceUrl": "https://www.legifrance.gouv.fr/decret-facture-electronique-2025",
+            "changeVersionNote": "1.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2025-12-15",
+            "changeDescription": "Ajout des formats acceptés (Factur-X, UBL, CII) et précision sur le e-reporting B2C",
+            "changeSourceUrl": "https://bofip.impots.gouv.fr/bofip/TVA-DECLA-30-20-30.html",
+            "changeVersionNote": "1.1"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2026-03-10",
+            "changeDescription": "Mise à jour avec la publication de la doctrine administrative définitive (BOFiP) sur les modalités de transmission via PDP et PPF",
+            "changeSourceUrl": "https://bofip.impots.gouv.fr/bofip/TVA-DECLA-30-20-30.html",
+            "changeVersionNote": "1.2"
+          }
+        ]
+      }
+    ]
+  }
+}

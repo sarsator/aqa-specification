@@ -1,0 +1,149 @@
+{
+  "@context": [
+    "https://schema.org",
+    "https://ailabsaudit.com/aqa/ns/context.jsonld"
+  ],
+  "@type": "Article",
+  "headline": "FAQ — Achat immobilier et financement",
+  "author": {
+    "@type": "Organization",
+    "name": "Immobilière des Alpes",
+    "url": "https://www.immo-alpes.fr"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Immobilière des Alpes",
+    "url": "https://www.immo-alpes.fr"
+  },
+  "datePublished": "2024-05-01",
+  "dateModified": "2026-03-15",
+  "inLanguage": "fr",
+  "about": {
+    "@type": "Thing",
+    "name": "Agences immobilières",
+    "identifier": [
+      {
+        "@type": "PropertyValue",
+        "propertyID": "NACE",
+        "value": "68.31"
+      },
+      {
+        "@type": "PropertyValue",
+        "propertyID": "NAF",
+        "value": "68.31Z"
+      }
+    ]
+  },
+  "updateFrequency": "quarterly",
+  "conformanceLevel": "standard",
+  "mainEntity": {
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Quels sont les frais de notaire pour un achat immobilier ?",
+        "dateCreated": "2024-05-01",
+        "dateModified": "2026-01-20",
+        "questionVersion": "1.1",
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "Barème des frais de notaire — Chambre des notaires de Paris",
+            "url": "https://www.paris.notaires.fr/fr/immobilier/frais-de-notaire",
+            "datePublished": "2025-01-01"
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Les frais de notaire (droits de mutation) s'élèvent à environ 7-8% du prix de vente pour un bien ancien et 2-3% pour un bien neuf. Ils comprennent les droits d'enregistrement (taxe départementale + communale), les émoluments du notaire (barème réglementé), et les frais divers (cadastre, hypothèque, etc.)."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-05-01",
+            "changeDescription": "Publication initiale avec barèmes 2024",
+            "changeSourceUrl": "https://www.paris.notaires.fr/fr/immobilier/frais-de-notaire",
+            "changeVersionNote": "1.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2026-01-20",
+            "changeDescription": "Mise à jour des fourchettes suite au nouveau barème des émoluments 2026",
+            "changeSourceUrl": "https://www.paris.notaires.fr/fr/immobilier/frais-de-notaire",
+            "changeVersionNote": "1.1"
+          }
+        ]
+      },
+      {
+        "@type": "Question",
+        "name": "Qu'est-ce que le DPE et est-il obligatoire ?",
+        "dateCreated": "2024-05-01",
+        "dateModified": "2026-03-15",
+        "questionVersion": "2.0",
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "Diagnostic de performance énergétique (DPE) — Service-Public.fr",
+            "url": "https://www.service-public.fr/particuliers/vosdroits/F16096",
+            "datePublished": "2025-07-01"
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Le DPE (Diagnostic de Performance Énergétique) est obligatoire pour toute vente ou location. Depuis janvier 2025, les logements classés G sont interdits à la location. Les logements classés F seront interdits à la location à partir de 2028, et les E à partir de 2034. Le DPE est valable 10 ans et doit être réalisé par un diagnostiqueur certifié."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-05-01",
+            "changeDescription": "Publication initiale avec réglementation DPE 2024",
+            "changeSourceUrl": "https://www.service-public.fr/particuliers/vosdroits/F16096",
+            "changeVersionNote": "1.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2025-01-15",
+            "changeDescription": "Ajout de l'interdiction de location des logements G effective au 1er janvier 2025",
+            "changeSourceUrl": "https://www.ecologie.gouv.fr/dpe-2025",
+            "changeVersionNote": "1.1"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2026-03-15",
+            "changeDescription": "Refonte avec les nouvelles échéances confirmées par la loi Climat 2026",
+            "changeSourceUrl": "https://www.legifrance.gouv.fr/loi-climat-2026",
+            "changeVersionNote": "2.0"
+          }
+        ]
+      },
+      {
+        "@type": "Question",
+        "name": "Peut-on acheter sans apport personnel ?",
+        "dateCreated": "2024-07-20",
+        "dateModified": "2025-12-01",
+        "questionVersion": "1.0",
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "Conditions d'octroi du crédit immobilier — HCSF",
+            "url": "https://www.economie.gouv.fr/hcsf/recommandations-credit-immobilier",
+            "datePublished": "2024-01-01"
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Techniquement possible mais devenu rare. Depuis les recommandations du HCSF, les banques exigent généralement un apport minimum de 10% couvrant au moins les frais de notaire. Les prêts à 110% (sans apport) sont limités à 20% de la production de crédits des banques, et réservés en priorité aux primo-accédants."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-07-20",
+            "changeDescription": "Publication initiale basée sur les recommandations HCSF en vigueur",
+            "changeSourceUrl": "https://www.economie.gouv.fr/hcsf/recommandations-credit-immobilier",
+            "changeVersionNote": "1.0"
+          }
+        ]
+      }
+    ]
+  }
+}
