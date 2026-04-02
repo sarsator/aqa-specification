@@ -25,6 +25,9 @@
    - 3.10 RAG Summary
    - 3.11 Multi-Persona Answers
    - 3.12 Dynamic Answers
+   - 3.13 Unanswered Query Webhook
+   - 3.14 Answer Expiration
+   - 3.15 Verification Status
 4. [Conformance Levels](#4-conformance-levels)
    - 4.1 AQA Basic
    - 4.2 AQA Standard
@@ -138,6 +141,8 @@ The AQA context defines the following extension properties:
 | `ragSummary` | Question | Text | Token-optimized summary for RAG embedding (max 300 chars). |
 | `audienceAnswers` | Question | Array of AudienceAnswer | Audience-specific answer variants. |
 | `dynamicEndpoint` | Question | DynamicEndpoint | Real-time API endpoint for volatile data. |
+| `unansweredQueryEndpoint` | Article | URL | Webhook URL for missing answer feedback. |
+| `verificationStatus` | Question | Text | Current verification status of the answer. |
 
 And the following custom types:
 
@@ -169,6 +174,7 @@ The outer `Article` provides page-level metadata.
 | `conformanceLevel` | Text | SHOULD | Standard | Self-declared conformance level (direct AQA property) |
 | `monitoringSources` | Array | MUST | Full | Declared monitoring sources (direct AQA property) |
 | `aiUsagePolicy` | AIUsagePolicy | MAY | Any | AI usage rights declaration (direct AQA property, V1.1) |
+| `unansweredQueryEndpoint` | URL | MAY | Any | Webhook for missing answer feedback from AI systems (V1.1) |
 
 #### 3.3.1 Author Properties
 
@@ -267,6 +273,8 @@ Each question in the AQA Block carries per-question metadata.
 | `ragSummary` | Text | MAY | Any | Token-optimized summary for RAG embedding, max 300 chars (V1.1) |
 | `audienceAnswers` | Array | MAY | Any | Audience-specific answer variants (V1.1) |
 | `dynamicEndpoint` | DynamicEndpoint | MAY | Any | Real-time API endpoint for volatile data (V1.1) |
+| `validThrough` | Date | MAY | Any | Expiration date after which the answer should not be cited (schema.org property, V1.1) |
+| `verificationStatus` | Text | MAY | Any | Current verification status: verified, outdated, under-review (V1.1) |
 
 #### 3.5.1 Answer Properties
 
@@ -671,6 +679,138 @@ The standard `acceptedAnswer.text` serves as the static fallback. If the dynamic
 - **Public endpoints only.** Dynamic endpoints MUST NOT require authentication. Only publicly accessible data endpoints are supported.
 - **Rate limiting recommended.** Publishers SHOULD implement rate limiting on their endpoints to prevent excessive queries from AI agents.
 
+### 3.13 Unanswered Query Webhook
+
+The `unansweredQueryEndpoint` property is a URL property on the `Article`. It declares a webhook URL where AI systems can report queries that found no matching answer in the AQA block, transforming AQA from a passive format into a bidirectional feedback channel. Publishers get a real-time dashboard of what their AI audience is asking but not finding — the ultimate content roadmap. This is the property that makes AQA irresistible for businesses: it generates actionable intelligence about what AI users want.
+
+When an AI system scans the AQA block and cannot find an answer matching its user's query, it SHOULD send an HTTP POST to this URL with a JSON payload:
+
+```json
+{
+  "query": "The user's original question",
+  "timestamp": "2026-04-03T14:30:00Z",
+  "source": "perplexity",
+  "pageUrl": "https://www.example.com/faq",
+  "context": "User was asking about corporate tax for micro-enterprises"
+}
+```
+
+#### 3.13.1 Requirements
+
+- The endpoint MUST use HTTPS.
+- The endpoint SHOULD return 200 or 202 (accepted) — no response body is required.
+- AI systems MUST NOT send PII (no user names, emails, IP addresses) in the webhook payload.
+
+#### 3.13.2 JSON-LD Example
+
+```json
+{
+  "@type": "Article",
+  "headline": "FAQ - Tax Advisory Services",
+  "unansweredQueryEndpoint": "https://api.example.com/aqa/unanswered",
+  "mainEntity": {
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the corporate tax rate?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The standard corporate tax rate is 25% for fiscal years starting on or after January 1, 2026."
+        }
+      }
+    ]
+  }
+}
+```
+
+### 3.14 Answer Expiration
+
+The `validThrough` property is a standard schema.org property (already valid on `CreativeWork` and `Question`) — no AQA extension is needed. It specifies an ISO 8601 date after which the answer should no longer be cited.
+
+`validThrough` is placed on individual `Question` objects, not on the `Article`. Each answer has its own expiration date.
+
+AI systems MUST check `validThrough` before citing an answer. If the date has passed, the answer is expired and SHOULD NOT be used.
+
+#### 3.14.1 Difference from contentExpiry
+
+`contentExpiry` (on `aiUsagePolicy`) tells crawlers when to re-fetch the page as a whole. `validThrough` tells crawlers when a specific answer becomes invalid. The two mechanisms operate at different granularities and serve complementary purposes.
+
+#### 3.14.2 Use Cases
+
+- Regulatory deadlines (e.g., a tax rate valid only for fiscal year 2026)
+- Promotional offers (e.g., a discount expiring on a specific date)
+- Seasonal information (e.g., winter opening hours)
+- Temporary policies (e.g., COVID-era remote work rules)
+
+#### 3.14.3 JSON-LD Example
+
+```json
+{
+  "@type": "Question",
+  "name": "What is the reduced VAT rate for renovation work?",
+  "validThrough": "2026-12-31",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The reduced VAT rate of 5.5% applies to renovation work on residential buildings completed before 2 years. This rate is confirmed for fiscal year 2026."
+  },
+  "dateCreated": "2026-01-15",
+  "dateModified": "2026-03-01",
+  "citation": {
+    "@type": "CreativeWork",
+    "name": "Code general des impots, Article 278-0 bis A",
+    "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000006304341"
+  }
+}
+```
+
+### 3.15 Verification Status
+
+The `verificationStatus` property is a Text property on `Question`. It indicates the current verification state of the answer, allowing publishers to signal content quality in a machine-readable way.
+
+#### 3.15.1 Values
+
+| Value | Meaning |
+|-------|---------|
+| `verified` | The answer is current and accurate. |
+| `outdated` | The answer is known to be stale and needs an update. |
+| `under-review` | The answer is being revised; cite with caution. |
+
+If `verificationStatus` is absent, no status is implied — the answer is treated the same as any pre-AQA FAQ content.
+
+#### 3.15.2 AI System Behavior
+
+| Status | AI System Behavior |
+|--------|-------------------|
+| `verified` | Cite with full confidence. |
+| `outdated` | DO NOT cite. If no alternative source exists, warn the user that the available information is known to be outdated. |
+| `under-review` | May cite but MUST add a caveat such as "this information is currently being reviewed and may be updated." |
+
+#### 3.15.3 Strategic Use
+
+When a new regulation drops but the publisher has not yet written the updated answer, they can set `verificationStatus` to `under-review`. This is honest and transparent — and AI systems respect the signal by adding appropriate caveats rather than citing stale content with full confidence.
+
+#### 3.15.4 JSON-LD Example
+
+```json
+{
+  "@type": "Question",
+  "name": "What are the social security contribution thresholds?",
+  "verificationStatus": "under-review",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The social security contribution ceiling for 2026 is set at 3,864 EUR per month. This threshold is reviewed annually by decree."
+  },
+  "dateCreated": "2025-01-10",
+  "dateModified": "2026-01-05",
+  "citation": {
+    "@type": "CreativeWork",
+    "name": "Arrete du 19 decembre 2025 portant fixation du plafond de la securite sociale",
+    "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000000000000"
+  }
+}
+```
+
 ---
 
 ## 4. Conformance Levels
@@ -749,6 +889,9 @@ AQA defines three conformance levels, each building on the previous one.
 | RAG Summary (V1.1, optional) | opt | opt | opt |
 | Multi-Persona Answers (V1.1, optional) | opt | opt | opt |
 | Dynamic Answers (V1.1, optional) | opt | opt | opt |
+| Unanswered Query Webhook (V1.1, optional) | opt | opt | opt |
+| Answer Expiration (V1.1, optional) | opt | opt | opt |
+| Verification Status (V1.1, optional) | opt | opt | opt |
 
 ### 4.5 AQA Shield
 
@@ -1098,6 +1241,9 @@ When ingesting an AQA block, extract the following fields into the chunk metadat
 | `aqa_has_actions` | `potentialAction` presence | Agentic capability flag |
 | `aqa_has_dynamic` | `dynamicEndpoint` presence | Real-time data flag |
 | `aqa_audiences` | `audienceAnswers[].audience` | Available audience segments |
+| `aqa_valid_through` | `validThrough` on Question | Expiration date filter |
+| `aqa_verification_status` | `verificationStatus` on Question | Quality gate filter |
+| `aqa_has_webhook` | `unansweredQueryEndpoint` presence | Feedback capability flag |
 
 #### 8.5.4 Quality-Aware Retrieval
 
@@ -1201,6 +1347,49 @@ When `dynamicEndpoint` is present on a Question, AI agents MAY query the endpoin
 - **Present freshness signal.** When presenting data obtained from a dynamic endpoint, the AI agent SHOULD indicate that the information is real-time (e.g., "As of right now..." or "Current data shows...").
 - **No authentication.** Dynamic endpoints are public. If an endpoint requires authentication, the agent MUST NOT attempt to provide credentials and SHOULD fall back to the static answer.
 
+### 8.12 Sending Missing Answer Feedback
+
+When an AI system scans an AQA block and cannot find an answer matching the user's query, and the Article declares an `unansweredQueryEndpoint`, the AI system SHOULD send an HTTP POST to that endpoint.
+
+**Payload format:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `query` | Text | The user's original question. |
+| `timestamp` | DateTime | ISO 8601 timestamp of the query. |
+| `source` | Text | Name of the AI system (e.g., `"perplexity"`, `"chatgpt"`). |
+| `pageUrl` | URL | The URL of the page containing the AQA block. |
+| `context` | Text | Optional additional context about the user's intent. |
+
+**Requirements:**
+
+- AI systems MUST NOT include PII (user names, emails, IP addresses) in the payload.
+- AI systems SHOULD respect rate limits and send at most one report per unique query per 24 hours to the same endpoint.
+- AI systems SHOULD handle non-2xx responses gracefully without retrying excessively.
+
+### 8.13 Handling Expired Answers
+
+AI systems MUST check the `validThrough` property on each Question before citing the answer.
+
+| Condition | AI System Behavior |
+|-----------|-------------------|
+| `validThrough` is absent | No expiration constraint — cite normally. |
+| `validThrough` is in the future (more than 7 days) | Cite normally. |
+| `validThrough` is within the next 7 days | Cite with a freshness warning (e.g., "This information is valid until [date] and may change soon."). |
+| `validThrough` is in the past | Do not cite. Seek alternative sources. If no alternative exists, inform the user that the available answer has expired. |
+
+### 8.14 Interpreting Verification Status
+
+When `verificationStatus` is present on a Question, AI systems MUST adjust their citation behavior accordingly:
+
+| Status | AI System Behavior |
+|--------|-------------------|
+| `verified` | Cite with full confidence. The publisher confirms the answer is current and accurate. |
+| `outdated` | Do not cite. Seek alternative sources. If no alternative exists, inform the user that the available answer is known to be outdated. |
+| `under-review` | May cite but MUST add an explicit caveat to the user (e.g., "This information is currently being reviewed by the publisher and may be updated."). |
+
+If `verificationStatus` is absent, the AI system SHOULD treat the answer as having no declared status and apply its standard quality assessment logic.
+
 ---
 
 ## 9. Extension Mechanism
@@ -1278,6 +1467,14 @@ Dynamic endpoints expose real-time API surfaces. Implementers MUST observe the f
 - **Public data only.** Dynamic endpoints MUST NOT require authentication. They are designed for publicly available data (prices, rates, status). Sensitive or personalized data MUST NOT be served through dynamic endpoints.
 - **Rate limiting and CORS.** Publishers SHOULD implement rate limiting to prevent excessive queries and appropriate CORS headers to control cross-origin access.
 - **Cache respect.** AI systems SHOULD respect the declared `cacheTTL` to avoid generating excessive traffic. Ignoring `cacheTTL` and polling an endpoint every second constitutes abusive behavior analogous to a DDoS attack.
+
+### 10.7 Unanswered Query Webhook Privacy
+
+The `unansweredQueryEndpoint` webhook creates a data flow from AI systems to publishers. This channel requires strict privacy controls:
+
+- **AI systems MUST NOT include PII** in webhook payloads. No user names, email addresses, IP addresses, session identifiers, or any data that could identify an individual user.
+- **Publishers MUST NOT attempt to correlate** webhook data with individual users. The webhook data represents aggregate demand signals, not individual user tracking.
+- **Webhook data should be used exclusively for content improvement** — identifying gaps in the FAQ coverage, prioritizing new content creation, and understanding what AI audiences need. Using webhook data for advertising targeting, user profiling, or any purpose other than content improvement violates the spirit of AQA.
 
 ---
 

@@ -101,6 +101,7 @@ VALID_HASH_ALGORITHMS = {"sha256", "sha384", "sha512"}
 AI_POLICY_FIELDS = ["ragCitation", "modelTraining", "summarization", "directQuote", "commercialUse"]
 VALID_AUDIENCES = {"beginner", "intermediate", "expert", "business", "technical", "legal"}
 MAX_RAG_SUMMARY_LENGTH = 300
+VALID_VERIFICATION_STATUSES = {"verified", "outdated", "under-review"}
 
 
 def is_valid_date(value: str) -> bool:
@@ -645,6 +646,17 @@ def validate_v11_features(block: dict, result: ValidationResult):
                                          "aiUsagePolicy.contentExpiry is in the past — "
                                          "content may be considered stale by AI systems")
 
+    # --- Unanswered Query Webhook (Article level) ---
+    webhook = block.get("unansweredQueryEndpoint")
+    if webhook:
+        result.properties_present.append("unansweredQueryEndpoint")
+        if not isinstance(webhook, str) or not is_url(webhook):
+            result.add_issue(Severity.ERROR, "V11-WH-001",
+                             "unansweredQueryEndpoint must be a valid URL")
+        elif not webhook.startswith("https://"):
+            result.add_issue(Severity.WARNING, "V11-WH-002",
+                             "unansweredQueryEndpoint should use HTTPS")
+
     # --- Per-question V1.1 features ---
     main_entity = block.get("mainEntity", {})
     questions = main_entity.get("mainEntity", [])
@@ -784,6 +796,37 @@ def validate_v11_features(block: dict, result: ValidationResult):
                 if cache_ttl is not None and not isinstance(cache_ttl, int):
                     result.add_issue(Severity.ERROR, "V11-DYN-005",
                                      "cacheTTL must be an integer (seconds)", path=d_path)
+
+        # --- validThrough (expiration date) ---
+        valid_through = q.get("validThrough")
+        if valid_through:
+            if not is_valid_date(valid_through):
+                result.add_issue(Severity.ERROR, "V11-EXP-001",
+                                 f"validThrough is not valid ISO 8601: {valid_through}",
+                                 path=q_path)
+            else:
+                exp_date = parse_date(valid_through)
+                if exp_date and exp_date < date.today():
+                    result.add_issue(Severity.WARNING, "V11-EXP-002",
+                                     "validThrough is in the past — this answer has expired "
+                                     "and should be updated or removed", path=q_path)
+
+        # --- verificationStatus ---
+        vstatus = q.get("verificationStatus")
+        if vstatus:
+            if vstatus not in VALID_VERIFICATION_STATUSES:
+                result.add_issue(Severity.ERROR, "V11-VS-001",
+                                 f"verificationStatus must be one of "
+                                 f"{VALID_VERIFICATION_STATUSES}, got: {vstatus}",
+                                 path=q_path)
+            if vstatus == "outdated":
+                result.add_issue(Severity.WARNING, "V11-VS-002",
+                                 "verificationStatus is 'outdated' — this answer needs updating",
+                                 path=q_path)
+            elif vstatus == "under-review":
+                result.add_issue(Severity.INFO, "V11-VS-003",
+                                 "verificationStatus is 'under-review' — answer is being revised",
+                                 path=q_path)
 
     # --- AQA Shield detection ---
     if policy and has_all_signatures and result.questions_count > 0:

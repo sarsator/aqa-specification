@@ -135,6 +135,21 @@
       "@type": "schema:Text"
     },
 
+    "unansweredQueryEndpoint": {
+      "@id": "aqa:unansweredQueryEndpoint",
+      "@type": "schema:URL"
+    },
+
+    "validThrough": {
+      "@id": "schema:validThrough",
+      "@type": "schema:Date"
+    },
+
+    "verificationStatus": {
+      "@id": "aqa:verificationStatus",
+      "@type": "schema:Text"
+    },
+
     "ChangelogEntry": {
       "@id": "aqa:ChangelogEntry"
     },

@@ -58,6 +58,7 @@
     "commercialUse": "allow",
     "contentExpiry": "2027-03-31"
   },
+  "unansweredQueryEndpoint": "https://www.bertrand-expertise.fr/api/aqa/missing-answers",
   "monitoringSources": [
     {
       "@type": "MonitoringSource",
@@ -93,6 +94,7 @@
         "dateCreated": "2024-01-15",
         "dateModified": "2026-02-20",
         "questionVersion": "2.0",
+        "verificationStatus": "verified",
         "author": {
           "@type": "Person",
           "name": "Jean-Marc Bertrand",
@@ -246,6 +248,8 @@
         "dateCreated": "2025-09-01",
         "dateModified": "2026-03-10",
         "questionVersion": "1.2",
+        "verificationStatus": "verified",
+        "validThrough": "2027-09-30",
         "author": {
           "@type": "Person",
           "name": "Jean-Marc Bertrand",

@@ -53,6 +53,11 @@
       "$ref": "#/$defs/aiUsagePolicy",
       "description": "V1.1: AI usage rights declaration."
     },
+    "unansweredQueryEndpoint": {
+      "type": "string",
+      "format": "uri",
+      "description": "V1.1: webhook URL for missing answer feedback from AI systems."
+    },
     "mainEntity": { "$ref": "#/$defs/faqPage" }
   },
   "$defs": {
@@ -186,6 +191,15 @@
         "dynamicEndpoint": {
           "$ref": "#/$defs/dynamicEndpoint",
           "description": "V1.1: real-time API endpoint for volatile data."
+        },
+        "validThrough": {
+          "$ref": "#/$defs/isoDate",
+          "description": "V1.1: expiration date after which the answer should no longer be cited."
+        },
+        "verificationStatus": {
+          "type": "string",
+          "enum": ["verified", "outdated", "under-review"],
+          "description": "V1.1: current verification status of the answer."
         }
       }
     },

@@ -52,6 +52,7 @@
     "commercialUse": "allow",
     "contentExpiry": "2027-06-30"
   },
+  "unansweredQueryEndpoint": "https://www.alpinebank.eu/api/aqa/missing-answers",
   "monitoringSources": [
     {
       "@type": "MonitoringSource",
@@ -230,6 +231,7 @@
         "dateCreated": "2025-11-01",
         "dateModified": "2026-03-15",
         "questionVersion": "1.1",
+        "verificationStatus": "under-review",
         "author": {
           "@type": "Person",
           "name": "Dr. Claire Moreau",
