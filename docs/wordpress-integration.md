@@ -155,3 +155,47 @@ python validators/validate.py https://www.yoursite.com/faq
 ```
 
 Or paste the JSON-LD into [Schema Markup Validator](https://validator.schema.org/) to verify schema.org compatibility.
+
+## V1.1 Features in WordPress
+
+AQA V1.1 introduces new properties for AI usage control, content integrity, and answer lifecycle. Here is how each maps to WordPress.
+
+### aiUsagePolicy (Site-Wide Setting)
+
+Add `aiUsagePolicy` as a site-wide setting in the plugin options page (Settings > AQA). This applies a single AI usage policy to all your AQA content. The plugin stores the policy as a serialized option and injects it into the Article-level JSON-LD on every AQA page.
+
+### contentSignature (Auto-Computed on Save)
+
+The content signature is automatically computed every time a question is saved. No manual input is needed. The plugin hooks into `save_post` and computes the SHA-256 hash of the answer text:
+
+```php
+$signature = hash('sha256', $answer_text);
+```
+
+This value is stored as post meta (`_aqa_content_signature`) and included in the JSON-LD output. If the answer text changes, the signature is recomputed automatically.
+
+### ragSummary (Custom Meta Field)
+
+Each question gets a `ragSummary` meta field -- a short, plain-text summary optimized for AI retrieval (maximum 300 characters). In the admin UI, a character counter appears below the field to help authors stay within the limit. The field is accessible in the question editor sidebar.
+
+### verificationStatus (Dropdown)
+
+Each question includes a `verificationStatus` dropdown with three options:
+
+- **verified** -- the answer is current and accurate
+- **outdated** -- the answer needs updating
+- **under-review** -- the answer is being revised
+
+New questions default to `verified`. When an answer is edited, the status resets to `under-review` until the author explicitly confirms it.
+
+### validThrough (Date Picker)
+
+Each question includes a `validThrough` date picker that sets the expiration date for the answer. After this date, AI systems may treat the answer as stale. The admin dashboard highlights questions whose `validThrough` date has passed or is approaching within 30 days.
+
+### unansweredQueryEndpoint (Global Setting)
+
+A single URL configured in Settings > AQA that receives POST requests when AI systems encounter questions your FAQ does not cover. This is a site-wide setting -- one endpoint for the entire site. The endpoint receives the original query, the AI model identifier, and a timestamp.
+
+### dynamicEndpoint (Per-Question Field)
+
+Each question can optionally define a `dynamicEndpoint` -- an API URL that AI systems can call to get a real-time answer instead of using the static text. This is useful for questions whose answers change frequently (stock levels, wait times, pricing). The field appears in the question editor alongside the other AQA meta fields.

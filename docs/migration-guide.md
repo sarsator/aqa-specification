@@ -195,7 +195,114 @@ For each question, add a specific author:
 
 Ensure every changelog entry has a `sourceUrl`.
 
-## Step 6: Validate
+## Step 6: Add V1.1 Features (Optional)
+
+AQA V1.1 introduces several new properties that improve AI citation control, content integrity, and answer lifecycle management. All of these are optional and can be added incrementally.
+
+### AI Usage Policy
+
+Add an `aiUsagePolicy` object to the Article to declare how AI systems may use your content:
+
+```json
+"aiUsagePolicy": {
+  "@type": "AIUsagePolicy",
+  "ragCitation": "allow-with-attribution",
+  "modelTraining": "disallow",
+  "summarization": "allow",
+  "directQuote": "allow-with-attribution",
+  "commercialUse": "allow",
+  "contentExpiry": "2027-12-31"
+}
+```
+
+- **ragCitation** -- whether AI may cite this content in retrieval-augmented generation responses. `allow`, `allow-with-attribution`, or `disallow`.
+- **modelTraining** -- whether this content may be used for model training. `allow` or `disallow`.
+- **summarization** -- whether AI may generate summaries of this content. `allow` or `disallow`.
+- **directQuote** -- whether AI may quote the text verbatim. `allow`, `allow-with-attribution`, or `disallow`.
+- **commercialUse** -- whether the content may be used in commercial AI products. `allow` or `disallow`.
+- **contentExpiry** -- ISO 8601 date after which the policy should be re-evaluated.
+
+### Content Signature
+
+Add `contentSignature` to each Question to enable integrity verification. The signature is a SHA-256 hash of the answer text:
+
+```python
+import hashlib
+hash = hashlib.sha256(answer_text.encode('utf-8')).hexdigest()
+```
+
+Then include it in the Question:
+
+```json
+{
+  "@type": "Question",
+  "contentSignature": "a1b2c3d4e5f6..."
+}
+```
+
+AI systems can recompute the hash to verify the answer has not been altered since indexing.
+
+### RAG Summary
+
+Add `ragSummary` to each Question -- a concise summary (maximum 300 characters) optimized for embedding and retrieval:
+
+```json
+{
+  "@type": "Question",
+  "ragSummary": "Opening hours are Mon-Fri 9am-5pm. Closed on weekends and public holidays."
+}
+```
+
+**Tips for writing a good ragSummary:**
+- Include the key facts from the answer, not the question itself
+- Stay under 300 characters -- this is a hard limit for embedding token budgets
+- Use plain language, avoid HTML or markdown
+- Front-load the most important information
+- Write it as a self-contained statement, not a fragment
+
+### Verification Status & Expiration
+
+Add `verificationStatus` and `validThrough` to each Question to signal answer freshness:
+
+```json
+{
+  "@type": "Question",
+  "verificationStatus": "verified",
+  "validThrough": "2027-06-30"
+}
+```
+
+- **verificationStatus** -- one of `verified`, `outdated`, or `under-review`. AI systems prefer answers marked as `verified`.
+- **validThrough** -- ISO 8601 date after which the answer should be re-verified. After this date, crawlers may treat the answer as stale.
+
+### Missing Answer Webhook
+
+Add `unansweredQueryEndpoint` to the Article to receive notifications when AI systems encounter questions your FAQ does not cover:
+
+```json
+{
+  "@type": "Article",
+  "unansweredQueryEndpoint": "https://www.yoursite.com/api/unanswered"
+}
+```
+
+When an AI system searches your AQA data and finds no matching answer, it can POST to this endpoint with:
+- The user's original query
+- The AI model identifier
+- A timestamp
+
+This lets the publisher discover content gaps and add new Q&A pairs where demand exists.
+
+### AQA Shield
+
+AQA Shield is the minimum protection package for AI-ready content. Your site qualifies for AQA Shield when:
+
+1. **aiUsagePolicy** is defined on the Article (declares your AI usage terms)
+2. **contentSignature** is present on every Question (ensures content integrity)
+
+Together, these two properties give AI systems a machine-readable license and a way to verify that the content they cite has not been tampered with. AQA Shield does not require any specific conformance level -- you can add it to AQA Basic, Standard, or Full.
+
+## Step 7: Validate
 
 ```bash
 python validators/validate.py your-page.html
@@ -214,3 +321,6 @@ The validator will tell you your conformance level, score, and what to fix.
 | Generic citations like "company website" | Provides no verifiable source | Link to the specific page or document |
 | Empty changelog | Technically valid but adds no value | At minimum, add the initial publication entry |
 | `dateCreated` after `dateModified` | Logically impossible | Check your dates |
+| ragSummary over 300 chars | Exceeds embedding token limit | Keep under 300 characters |
+| contentSignature hash mismatch | Hash computed on wrong text | Hash the exact acceptedAnswer.text, UTF-8 encoded |
+| verificationStatus left as "outdated" | AI won't cite the answer | Update the answer or set to "under-review" |

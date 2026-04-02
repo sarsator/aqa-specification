@@ -129,6 +129,18 @@ The AI can cite specifically, mention the date, and reference the underlying leg
 
 ---
 
+## V1.1: Beyond Citation
+
+### Without V1.1
+
+> The AI cites the answer but has no rights framework, no integrity proof, and no way to tell the publisher what questions are missing.
+
+### With V1.1
+
+> The AI checks usage rights before citing. It verifies the content hash matches. It selects the expert-level answer for a technical user. It calls the dynamic endpoint for real-time rates. And when a user asks a question not covered, it pings the webhook — so the publisher knows exactly what content to create next.
+
+---
+
 ## Summary
 
 | Capability | Traditional FAQ | AQA Basic | AQA Standard | AQA Full |
@@ -143,3 +155,11 @@ The AI can cite specifically, mention the date, and reference the underlying leg
 | Monitoring sources | ❌ | ❌ | ❌ | ✅ |
 | Expert author per answer | ❌ | ❌ | ❌ | ✅ |
 | Full provenance chain | ❌ | ❌ | ❌ | ✅ |
+| AI usage rights declaration | ❌ | opt | opt | opt |
+| Content integrity (hash) | ❌ | opt | opt | opt |
+| RAG-optimized summary | ❌ | opt | opt | opt |
+| Multi-audience answers | ❌ | opt | opt | opt |
+| Real-time data endpoint | ❌ | opt | opt | opt |
+| Missing answer feedback | ❌ | opt | opt | opt |
+| Per-answer expiration | ❌ | opt | opt | opt |
+| Verification status | ❌ | opt | opt | opt |

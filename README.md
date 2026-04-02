@@ -3,7 +3,7 @@
 **An open specification for structured Q&A content optimized for AI comprehension and citation.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Spec Version](https://img.shields.io/badge/spec-v1.0.0--draft-orange.svg)](SPECIFICATION.md)
+[![Spec Version](https://img.shields.io/badge/spec-v1.1.0--draft-orange.svg)](SPECIFICATION.md)
 [![Schema.org Compatible](https://img.shields.io/badge/schema.org-compatible-green.svg)](https://schema.org)
 
 ---
@@ -37,6 +37,14 @@ AQA is a **documented convention** for enriching Q&A structured data with the me
 | `monitoringSources` | What feeds and publications the publisher watches |
 | Sector classification (NACE/NAF/SIC) | The industry context for relevance matching |
 | Per-question author with credentials | Who wrote each answer and why they're qualified |
+| `aiUsagePolicy` | Granular AI rights: RAG, training, citation, summarization, commercial use |
+| `contentSignature` | SHA-256 hash proving answer integrity — anti-hallucination proof |
+| `ragSummary` | Token-optimized 300-char summary ready for vector embedding |
+| `audienceAnswers` | Audience-specific answer variants (beginner, expert, business...) |
+| `dynamicEndpoint` | Real-time API for volatile data (prices, rates, status) |
+| `unansweredQueryEndpoint` | Webhook: AI sends missing questions back to the publisher |
+| `validThrough` | Per-answer expiration date — AI stops citing after this date |
+| `verificationStatus` | verified / outdated / under-review status per answer |
 
 ### Three Conformance Levels
 
@@ -45,6 +53,23 @@ AQA is a **documented convention** for enriching Q&A structured data with the me
 | **AQA Basic** | Minimal | Each answer has a known age and at least one source |
 | **AQA Standard** | Moderate | Content is actively maintained, changes are tracked, industry context is explicit |
 | **AQA Full** | Significant | Full provenance chain — who, what, when, why, from where |
+
+### AQA Shield (V1.1)
+
+When every question in an AQA document includes both `aiUsagePolicy` and `contentSignature`, the document qualifies for **AQA Shield** — a combination of legal protection and cryptographic integrity:
+
+- **`aiUsagePolicy`** declares exactly what AI systems are allowed to do with each answer (RAG, training, citation, summarization, commercial use).
+- **`contentSignature`** provides a SHA-256 hash of the answer content, enabling AI consumers to verify that the answer has not been altered or hallucinated.
+
+AQA Shield works at any conformance level (Basic, Standard, or Full). It is an orthogonal guarantee that can be added to any existing AQA implementation.
+
+### V1.1 Features
+
+AQA V1.1 introduces 9 new properties, organized in three groups:
+
+- **Protection** — AI Usage Policy, Content Signature (together = AQA Shield)
+- **Enrichment** — RAG Summary, Multi-Persona Answers, Agentic Actions, Dynamic Endpoints
+- **Feedback** — Missing Answer Webhook, Answer Expiration, Verification Status
 
 ## Quick Start
 
@@ -91,10 +116,12 @@ python validators/validate.py your-file.jsonld
 
 See the [Migration Guide](docs/migration-guide.md) to move from Basic to Standard and Full.
 
+> **Note:** For V1.1 features (AQA Shield, RAG Summary, audience variants, etc.), see the [full specification](SPECIFICATION.md).
+
 ## Repository Structure
 
 ```
-├── SPECIFICATION.md          # Complete technical specification
+├── SPECIFICATION.md          # Complete technical specification (V1.1)
 ├── schemas/
 │   ├── aqa-context.jsonld    # JSON-LD context for AQA extensions
 │   └── aqa-schema.json       # JSON Schema for validation

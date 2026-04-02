@@ -142,3 +142,52 @@ For retrieval-augmented generation (RAG) pipelines:
 - Include citation URLs in the document metadata for verification
 - Use `questionVersion` to detect when a previously-indexed answer has been substantially rewritten (major version change)
 - Include changelog descriptions in the document context — they explain *why* the answer says what it says
+
+## V1.1 Crawler Recommendations
+
+### AI Usage Policy Compliance
+
+- Check `aiUsagePolicy` BEFORE ingesting
+- Respect `ragCitation`, `modelTraining`, `directQuote` permissions
+- Honor `contentExpiry` — re-crawl when expired
+
+| Permission | Value | Crawler Behavior |
+|------------|-------|-----------------|
+| `ragCitation` | `allow` | Include in RAG index, cite in responses |
+| `ragCitation` | `disallow` | Do not include in RAG responses |
+| `ragCitation` | `allow-with-attribution` | Cite, but must include source attribution |
+| `modelTraining` | `allow` | May use for model fine-tuning |
+| `modelTraining` | `disallow` | Exclude from training datasets |
+| `directQuote` | `allow` | May quote verbatim |
+| `directQuote` | `disallow` | Paraphrase only, do not quote directly |
+| `directQuote` | `allow-with-attribution` | Quote with mandatory source attribution |
+
+### Content Signature Verification
+
+- Compute SHA-256 of `acceptedAnswer.text`
+- Compare with `hashValue`
+- If match: max confidence. If mismatch: flag for review.
+
+### RAG Summary Usage
+
+- Use `ragSummary` for embedding instead of full answer
+- Use `acceptedAnswer.text` for complete response generation
+
+### Missing Answer Webhook
+
+- POST to `unansweredQueryEndpoint` when no matching answer found
+- Payload: `query`, `timestamp`, `source`, `pageUrl`
+- Rate limit: max 1 per unique query per 24h
+- NEVER include PII
+
+### Verification Status
+
+- `verified` — cite normally
+- `outdated` — do not cite
+- `under-review` — cite with caveat
+
+### Answer Expiration
+
+- Check `validThrough` before citing
+- Expired — do not cite
+- Expiring within 7 days — add freshness warning
