@@ -49,6 +49,15 @@
   },
   "updateFrequency": "monthly",
   "conformanceLevel": "full",
+  "aiUsagePolicy": {
+    "@type": "AIUsagePolicy",
+    "ragCitation": "allow-with-attribution",
+    "modelTraining": "disallow",
+    "summarization": "allow-with-attribution",
+    "directQuote": "allow-with-attribution",
+    "commercialUse": "allow",
+    "contentExpiry": "2027-03-31"
+  },
   "monitoringSources": [
     {
       "@type": "MonitoringSource",
@@ -125,7 +134,36 @@
             "changeSourceUrl": "https://www.legifrance.gouv.fr/loi-finances-2026-art42",
             "changeVersionNote": "2.0"
           }
-        ]
+        ],
+        "contentSignature": {
+          "@type": "ContentSignature",
+          "hashAlgorithm": "sha256",
+          "hashValue": "eb1baad536d588eabb69e0890de2501fb15c647d1086409a17e1e829f43be802",
+          "signedFields": ["acceptedAnswer.text"],
+          "signedAt": "2026-02-20T15:00:00Z"
+        },
+        "ragSummary": "Liasse fiscale : dépôt avant le 2e jour ouvré après le 1er mai (exercice civil) ou 3 mois après clôture. Télédéclaration EDI-TDFC obligatoire pour tous depuis 2026. Sanction : 0,2% min 60€.",
+        "audienceAnswers": [
+          {
+            "@type": "AudienceAnswer",
+            "audience": "beginner",
+            "text": "La liasse fiscale doit être déposée chaque année avant début mai. Depuis 2026, vous devez obligatoirement le faire en ligne via la procédure EDI-TDFC, sinon vous risquez une pénalité."
+          },
+          {
+            "@type": "AudienceAnswer",
+            "audience": "expert",
+            "text": "Dépôt J+2 ouvré post-1er mai (CGI art. 175) ou M+3 post-clôture pour exercices décalés. LF 2026 art. 42 : EDI-TDFC obligatoire tous régimes réels, suppression seuil CA. Sanction art. 1738 : majoration 0,2% min 60€."
+          }
+        ],
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://www.bertrand-expertise.fr/api/faq/search?q={query}&topic=fiscalite",
+            "httpMethod": "GET"
+          },
+          "description": "Rechercher dans la FAQ fiscalité du cabinet"
+        }
       },
       {
         "@type": "Question",
@@ -192,7 +230,15 @@
             "changeSourceUrl": "https://www.legifrance.gouv.fr/loi-finances-2026-art15",
             "changeVersionNote": "3.0"
           }
-        ]
+        ],
+        "contentSignature": {
+          "@type": "ContentSignature",
+          "hashAlgorithm": "sha256",
+          "hashValue": "857dd34ef29b01009b59002da9c4a22409c7bee307011ea8b41602c68d668c0a",
+          "signedFields": ["acceptedAnswer.text"],
+          "signedAt": "2026-03-25T16:00:00Z"
+        },
+        "ragSummary": "IS PME 2026 : taux réduit 15% sur premiers 50 000€ (relevé de 42 500€ par LF 2026). Conditions : CA < 10M€, capital libéré, détenu 75% personnes physiques. Au-delà : 25%."
       },
       {
         "@type": "Question",
@@ -252,7 +298,23 @@
             "changeSourceUrl": "https://bofip.impots.gouv.fr/bofip/TVA-DECLA-30-20-30.html",
             "changeVersionNote": "1.2"
           }
-        ]
+        ],
+        "contentSignature": {
+          "@type": "ContentSignature",
+          "hashAlgorithm": "sha256",
+          "hashValue": "21018ace52e4dbce4464a0291081f1524c81f6d9ab235930099eda71686288f8",
+          "signedFields": ["acceptedAnswer.text"],
+          "signedAt": "2026-03-10T10:00:00Z"
+        },
+        "ragSummary": "Facturation électronique : réception obligatoire sept. 2026 (toutes entreprises), émission obligatoire sept. 2026 (GE/ETI) puis sept. 2027 (PME/TPE). Via PDP ou PPF. Formats : Factur-X, UBL, CII.",
+        "dynamicEndpoint": {
+          "@type": "DynamicEndpoint",
+          "url": "https://www.bertrand-expertise.fr/api/facture-electronique/calendrier",
+          "httpMethod": "GET",
+          "responseFormat": "application/json",
+          "cacheTTL": 86400,
+          "fallbackText": "Consultez notre site pour le calendrier à jour de la facturation électronique."
+        }
       }
     ]
   }

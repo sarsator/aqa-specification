@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ailabsaudit.com/aqa/schema/v1.0.0/aqa-schema.json",
+  "$id": "https://ailabsaudit.com/aqa/schema/v1.1.0/aqa-schema.json",
   "title": "AQA Block Schema",
-  "description": "JSON Schema for validating AQA (AI Question Answer) structured data blocks. AQA extension properties are expressed as direct properties via the AQA JSON-LD context.",
+  "description": "JSON Schema for validating AQA (AI Question Answer) structured data blocks. V1.1 adds AI Usage Policy, Agentic Actions, Content Signature, RAG Summary, Multi-Persona Answers, and Dynamic Endpoints.",
   "type": "object",
   "required": ["@context", "@type", "headline", "author", "datePublished", "dateModified", "mainEntity"],
   "properties": {
@@ -13,126 +13,77 @@
           "type": "array",
           "items": { "type": "string" },
           "minItems": 1,
-          "contains": {
-            "type": "string",
-            "pattern": "schema\\.org"
-          }
+          "contains": { "type": "string", "pattern": "schema\\.org" }
         },
-        {
-          "type": "string",
-          "pattern": "schema\\.org"
-        }
+        { "type": "string", "pattern": "schema\\.org" }
       ]
     },
     "@type": {
       "type": "string",
-      "enum": ["Article", "NewsArticle", "TechArticle", "BlogPosting", "WebPage"],
-      "description": "Must be Article or a recognized subtype."
+      "enum": ["Article", "NewsArticle", "TechArticle", "BlogPosting", "WebPage"]
     },
     "headline": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 300,
-      "description": "Title of the Q&A section."
+      "maxLength": 300
     },
-    "author": {
-      "$ref": "#/$defs/author",
-      "description": "Author or maintaining entity."
-    },
-    "publisher": {
-      "$ref": "#/$defs/organization",
-      "description": "Publishing organization."
-    },
-    "datePublished": {
-      "$ref": "#/$defs/isoDate",
-      "description": "Initial publication date."
-    },
-    "dateModified": {
-      "$ref": "#/$defs/isoDate",
-      "description": "Most recent modification date."
-    },
+    "author": { "$ref": "#/$defs/author" },
+    "publisher": { "$ref": "#/$defs/organization" },
+    "datePublished": { "$ref": "#/$defs/isoDate" },
+    "dateModified": { "$ref": "#/$defs/isoDate" },
     "inLanguage": {
       "type": "string",
-      "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
-      "description": "BCP 47 language tag."
+      "pattern": "^[a-z]{2}(-[A-Z]{2})?$"
     },
-    "about": {
-      "$ref": "#/$defs/sectorClassification",
-      "description": "Sector classification via identifier (required for Standard+)."
-    },
+    "about": { "$ref": "#/$defs/sectorClassification" },
     "updateFrequency": {
       "type": "string",
-      "enum": ["weekly", "monthly", "quarterly", "yearly"],
-      "description": "AQA extension: declared maintenance cadence (required for Standard+)."
+      "enum": ["weekly", "monthly", "quarterly", "yearly"]
     },
     "conformanceLevel": {
       "type": "string",
-      "enum": ["basic", "standard", "full"],
-      "description": "AQA extension: self-declared conformance level."
+      "enum": ["basic", "standard", "full"]
     },
     "monitoringSources": {
       "type": "array",
       "minItems": 2,
-      "items": { "$ref": "#/$defs/monitoringSource" },
-      "description": "AQA extension: declared monitoring sources (required for Full)."
+      "items": { "$ref": "#/$defs/monitoringSource" }
     },
-    "mainEntity": {
-      "$ref": "#/$defs/faqPage",
-      "description": "The embedded FAQPage."
-    }
+    "aiUsagePolicy": {
+      "$ref": "#/$defs/aiUsagePolicy",
+      "description": "V1.1: AI usage rights declaration."
+    },
+    "mainEntity": { "$ref": "#/$defs/faqPage" }
   },
   "$defs": {
     "isoDate": {
       "type": "string",
-      "pattern": "^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2}(:\\d{2})?(Z|[+-]\\d{2}:?\\d{2})?)?$",
-      "description": "ISO 8601 date or datetime."
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2}(:\\d{2})?(Z|[+-]\\d{2}:?\\d{2})?)?$"
     },
     "author": {
       "type": "object",
       "required": ["@type", "name"],
       "properties": {
-        "@type": {
-          "type": "string",
-          "enum": ["Person", "Organization"]
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1
-        },
-        "url": {
-          "type": "string",
-          "format": "uri"
-        },
-        "jobTitle": {
-          "type": "string"
-        },
+        "@type": { "type": "string", "enum": ["Person", "Organization"] },
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" },
+        "jobTitle": { "type": "string" },
         "sameAs": {
           "oneOf": [
             { "type": "string", "format": "uri" },
             { "type": "array", "items": { "type": "string", "format": "uri" } }
           ]
         },
-        "affiliation": {
-          "$ref": "#/$defs/organization"
-        }
+        "affiliation": { "$ref": "#/$defs/organization" }
       }
     },
     "organization": {
       "type": "object",
       "required": ["@type", "name"],
       "properties": {
-        "@type": {
-          "type": "string",
-          "const": "Organization"
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1
-        },
-        "url": {
-          "type": "string",
-          "format": "uri"
-        },
+        "@type": { "type": "string", "const": "Organization" },
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" },
         "sameAs": {
           "oneOf": [
             { "type": "string", "format": "uri" },
@@ -145,14 +96,8 @@
       "type": "object",
       "required": ["@type", "name"],
       "properties": {
-        "@type": {
-          "type": "string",
-          "const": "Thing"
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1
-        },
+        "@type": { "type": "string", "const": "Thing" },
+        "name": { "type": "string", "minLength": 1 },
         "identifier": {
           "type": "array",
           "minItems": 1,
@@ -161,14 +106,10 @@
             "required": ["@type", "propertyID", "value"],
             "properties": {
               "@type": { "type": "string", "const": "PropertyValue" },
-              "propertyID": {
-                "type": "string",
-                "enum": ["NACE", "NAF", "SIC", "ISIC"]
-              },
+              "propertyID": { "type": "string", "enum": ["NACE", "NAF", "SIC", "ISIC"] },
               "value": { "type": "string", "minLength": 1 }
             }
-          },
-          "description": "Sector codes using identifier (valid on Thing in schema.org)."
+          }
         }
       }
     },
@@ -176,10 +117,7 @@
       "type": "object",
       "required": ["@type", "mainEntity"],
       "properties": {
-        "@type": {
-          "type": "string",
-          "const": "FAQPage"
-        },
+        "@type": { "type": "string", "const": "FAQPage" },
         "mainEntity": {
           "type": "array",
           "minItems": 1,
@@ -191,24 +129,11 @@
       "type": "object",
       "required": ["@type", "name", "dateCreated", "dateModified", "acceptedAnswer", "citation"],
       "properties": {
-        "@type": {
-          "type": "string",
-          "const": "Question"
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1,
-          "description": "The question text."
-        },
-        "dateCreated": {
-          "$ref": "#/$defs/isoDate"
-        },
-        "dateModified": {
-          "$ref": "#/$defs/isoDate"
-        },
-        "author": {
-          "$ref": "#/$defs/author"
-        },
+        "@type": { "type": "string", "const": "Question" },
+        "name": { "type": "string", "minLength": 1 },
+        "dateCreated": { "$ref": "#/$defs/isoDate" },
+        "dateModified": { "$ref": "#/$defs/isoDate" },
+        "author": { "$ref": "#/$defs/author" },
         "citation": {
           "oneOf": [
             { "type": "string", "format": "uri" },
@@ -223,22 +148,44 @@
                 ]
               }
             }
-          ],
-          "description": "Source(s) backing this answer."
+          ]
         },
-        "acceptedAnswer": {
-          "$ref": "#/$defs/answer"
-        },
+        "acceptedAnswer": { "$ref": "#/$defs/answer" },
         "questionVersion": {
           "type": "string",
-          "pattern": "^\\d+\\.\\d+$",
-          "description": "AQA extension: semantic version of this answer (major.minor)."
+          "pattern": "^\\d+\\.\\d+$"
         },
         "changelog": {
           "type": "array",
           "minItems": 1,
-          "items": { "$ref": "#/$defs/changelogEntry" },
-          "description": "AQA extension: revision history for this answer."
+          "items": { "$ref": "#/$defs/changelogEntry" }
+        },
+        "potentialAction": {
+          "oneOf": [
+            { "$ref": "#/$defs/action" },
+            { "type": "array", "items": { "$ref": "#/$defs/action" } }
+          ],
+          "description": "V1.1: executable action linked to this answer."
+        },
+        "contentSignature": {
+          "$ref": "#/$defs/contentSignature",
+          "description": "V1.1: cryptographic signature of answer content."
+        },
+        "ragSummary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300,
+          "description": "V1.1: token-optimized summary for RAG embedding (max 300 chars)."
+        },
+        "audienceAnswers": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/audienceAnswer" },
+          "description": "V1.1: audience-specific answer variants."
+        },
+        "dynamicEndpoint": {
+          "$ref": "#/$defs/dynamicEndpoint",
+          "description": "V1.1: real-time API endpoint for volatile data."
         }
       }
     },
@@ -246,91 +193,168 @@
       "type": "object",
       "required": ["@type", "text"],
       "properties": {
-        "@type": {
-          "type": "string",
-          "const": "Answer"
-        },
-        "text": {
-          "type": "string",
-          "minLength": 1,
-          "description": "The answer content."
-        },
-        "dateModified": {
-          "$ref": "#/$defs/isoDate"
-        }
+        "@type": { "type": "string", "const": "Answer" },
+        "text": { "type": "string", "minLength": 1 },
+        "dateModified": { "$ref": "#/$defs/isoDate" }
       }
     },
     "creativeWork": {
       "type": "object",
       "required": ["@type", "name", "url"],
       "properties": {
-        "@type": {
-          "type": "string",
-          "const": "CreativeWork"
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1
-        },
-        "url": {
-          "type": "string",
-          "format": "uri"
-        },
-        "datePublished": {
-          "$ref": "#/$defs/isoDate"
-        }
+        "@type": { "type": "string", "const": "CreativeWork" },
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" },
+        "datePublished": { "$ref": "#/$defs/isoDate" },
+        "abstract": { "type": "string", "description": "Verbatim excerpt from the source." }
       }
     },
     "changelogEntry": {
       "type": "object",
       "required": ["changeDate", "changeDescription"],
       "properties": {
-        "@type": {
-          "type": "string",
-          "const": "ChangelogEntry"
-        },
-        "changeDate": {
-          "$ref": "#/$defs/isoDate",
-          "description": "Date of the modification."
-        },
-        "changeDescription": {
-          "type": "string",
-          "minLength": 1,
-          "description": "Human-readable description of what changed."
-        },
-        "changeSourceUrl": {
-          "type": "string",
-          "format": "uri",
-          "description": "URL of the source that triggered the update."
-        },
-        "changeVersionNote": {
-          "type": "string",
-          "description": "Version number after this change."
-        }
+        "@type": { "type": "string", "const": "ChangelogEntry" },
+        "changeDate": { "$ref": "#/$defs/isoDate" },
+        "changeDescription": { "type": "string", "minLength": 1 },
+        "changeSourceUrl": { "type": "string", "format": "uri" },
+        "changeVersionNote": { "type": "string" }
       }
     },
     "monitoringSource": {
       "type": "object",
       "required": ["name", "url"],
       "properties": {
-        "@type": {
+        "@type": { "type": "string", "const": "MonitoringSource" },
+        "name": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" },
+        "sourceType": {
           "type": "string",
-          "const": "MonitoringSource"
+          "enum": ["rss", "regulatory", "journal", "newsletter", "government", "professional_body"]
+        }
+      }
+    },
+    "aiUsagePolicy": {
+      "type": "object",
+      "required": ["@type"],
+      "properties": {
+        "@type": { "type": "string", "const": "AIUsagePolicy" },
+        "ragCitation": {
+          "type": "string",
+          "enum": ["allow", "disallow", "allow-with-attribution"],
+          "description": "Permission for RAG citation. Default if absent: allow."
         },
-        "name": {
+        "modelTraining": {
+          "type": "string",
+          "enum": ["allow", "disallow", "allow-with-attribution"],
+          "description": "Permission for model training data. Default if absent: disallow."
+        },
+        "summarization": {
+          "type": "string",
+          "enum": ["allow", "disallow", "allow-with-attribution"],
+          "description": "Permission for content summarization. Default if absent: allow."
+        },
+        "directQuote": {
+          "type": "string",
+          "enum": ["allow", "disallow", "allow-with-attribution"],
+          "description": "Permission for verbatim quoting. Default if absent: allow-with-attribution."
+        },
+        "commercialUse": {
+          "type": "string",
+          "enum": ["allow", "disallow", "allow-with-attribution"],
+          "description": "Permission for commercial AI products. Default if absent: allow."
+        },
+        "contentExpiry": {
+          "$ref": "#/$defs/isoDate",
+          "description": "Date after which AI systems SHOULD re-fetch content."
+        }
+      }
+    },
+    "contentSignature": {
+      "type": "object",
+      "required": ["@type", "hashAlgorithm", "hashValue", "signedFields", "signedAt"],
+      "properties": {
+        "@type": { "type": "string", "const": "ContentSignature" },
+        "hashAlgorithm": {
+          "type": "string",
+          "enum": ["sha256", "sha384", "sha512"]
+        },
+        "hashValue": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64,128}$",
+          "description": "Hex-encoded hash value."
+        },
+        "signedFields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "contains": { "const": "acceptedAnswer.text" },
+          "description": "JSON paths of signed fields. Must include acceptedAnswer.text."
+        },
+        "signedAt": { "$ref": "#/$defs/isoDate" }
+      }
+    },
+    "action": {
+      "type": "object",
+      "required": ["@type", "target"],
+      "properties": {
+        "@type": { "type": "string", "minLength": 1 },
+        "target": {
+          "type": "object",
+          "required": ["@type", "urlTemplate"],
+          "properties": {
+            "@type": { "type": "string", "const": "EntryPoint" },
+            "urlTemplate": { "type": "string", "minLength": 1 },
+            "httpMethod": { "type": "string", "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"] },
+            "contentType": { "type": "string" }
+          }
+        },
+        "description": { "type": "string" }
+      }
+    },
+    "audienceAnswer": {
+      "type": "object",
+      "required": ["@type", "audience", "text"],
+      "properties": {
+        "@type": { "type": "string", "const": "AudienceAnswer" },
+        "audience": {
           "type": "string",
           "minLength": 1,
-          "description": "Human-readable name of the source."
+          "description": "Target audience: beginner, intermediate, expert, business, technical, legal."
         },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Answer text tailored for this audience."
+        }
+      }
+    },
+    "dynamicEndpoint": {
+      "type": "object",
+      "required": ["@type", "url"],
+      "properties": {
+        "@type": { "type": "string", "const": "DynamicEndpoint" },
         "url": {
           "type": "string",
           "format": "uri",
-          "description": "URL of the source or RSS feed."
+          "description": "API endpoint URL for real-time data."
         },
-        "sourceType": {
+        "httpMethod": {
           "type": "string",
-          "enum": ["rss", "regulatory", "journal", "newsletter", "government", "professional_body"],
-          "description": "Type of monitoring source."
+          "enum": ["GET", "POST"],
+          "description": "HTTP method. Default: GET."
+        },
+        "responseFormat": {
+          "type": "string",
+          "description": "Expected response MIME type (e.g., application/json)."
+        },
+        "cacheTTL": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Cache duration in seconds. 0 = no cache."
+        },
+        "fallbackText": {
+          "type": "string",
+          "description": "Static fallback text if the endpoint is unavailable."
         }
       }
     }

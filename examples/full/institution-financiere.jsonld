@@ -43,6 +43,15 @@
   },
   "updateFrequency": "monthly",
   "conformanceLevel": "full",
+  "aiUsagePolicy": {
+    "@type": "AIUsagePolicy",
+    "ragCitation": "allow-with-attribution",
+    "modelTraining": "disallow",
+    "summarization": "allow-with-attribution",
+    "directQuote": "allow-with-attribution",
+    "commercialUse": "allow",
+    "contentExpiry": "2027-06-30"
+  },
   "monitoringSources": [
     {
       "@type": "MonitoringSource",
@@ -133,6 +142,26 @@
             "changeSourceUrl": "https://www.anti-money-laundering.eu/amla-guidelines-2026",
             "changeVersionNote": "3.0"
           }
+        ],
+        "contentSignature": {
+          "@type": "ContentSignature",
+          "hashAlgorithm": "sha256",
+          "hashValue": "ce54046e3d792cb94d937c9c6659e7b750dc34e214f2e7ba19a93262f7409016",
+          "signedFields": ["acceptedAnswer.text"],
+          "signedAt": "2026-03-28T14:00:00Z"
+        },
+        "ragSummary": "CDD requirements under EU AMLR: identify/verify customer identity, identify beneficial owner, assess business relationship purpose, conduct ongoing monitoring. EDD required for PEPs, correspondent banking, high-risk countries.",
+        "audienceAnswers": [
+          {
+            "@type": "AudienceAnswer",
+            "audience": "beginner",
+            "text": "Banks must verify who their customers are (ID check), understand why they need an account, and keep monitoring transactions. For high-risk clients like politicians, extra checks are required."
+          },
+          {
+            "@type": "AudienceAnswer",
+            "audience": "expert",
+            "text": "AMLR mandates risk-based CDD: SDD for low-risk (Art. 27), standard CDD (Art. 19-22), EDD for PEPs/correspondent banking/high-risk third countries (Art. 28-33). Ongoing monitoring per Art. 23 with transaction analysis commensurate to risk profile."
+          }
         ]
       },
       {
@@ -185,7 +214,15 @@
             "changeSourceUrl": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1624#art50",
             "changeVersionNote": "2.0"
           }
-        ]
+        ],
+        "contentSignature": {
+          "@type": "ContentSignature",
+          "hashAlgorithm": "sha256",
+          "hashValue": "498914a2dbcde703ec2829811c150b24459d87b32e5d01945645e3cde3ed9e36",
+          "signedFields": ["acceptedAnswer.text"],
+          "signedAt": "2026-02-10T11:00:00Z"
+        },
+        "ragSummary": "No monetary threshold for SARs. Report to FIU whenever suspicion of money laundering/terrorist financing regardless of amount. EUR 10,000 threshold applies only to occasional cash transactions, not to suspicious activity reporting."
       },
       {
         "@type": "Question",
@@ -232,7 +269,23 @@
             "changeSourceUrl": "https://www.anti-money-laundering.eu/amla-operational-guidelines-2026",
             "changeVersionNote": "1.1"
           }
-        ]
+        ],
+        "contentSignature": {
+          "@type": "ContentSignature",
+          "hashAlgorithm": "sha256",
+          "hashValue": "bc862f545b15ebf9ff711910a0da59ac97ee2f83ad53acb4fc7ad4e9e340f853",
+          "signedFields": ["acceptedAnswer.text"],
+          "signedAt": "2026-03-15T09:00:00Z"
+        },
+        "ragSummary": "AMLA (Frankfurt) operational mid-2025. Directly supervises highest-risk cross-border institutions. Issues binding RTS and guidelines. Coordinates FIU cooperation. Non-selected entities comply via national supervisors.",
+        "dynamicEndpoint": {
+          "@type": "DynamicEndpoint",
+          "url": "https://www.alpinebank.eu/api/compliance/amla-status",
+          "httpMethod": "GET",
+          "responseFormat": "application/json",
+          "cacheTTL": 86400,
+          "fallbackText": "Visit our compliance portal for the latest AMLA supervision status."
+        }
       }
     ]
   }

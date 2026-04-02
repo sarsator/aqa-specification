@@ -95,6 +95,13 @@ VALID_ARTICLE_TYPES = {"Article", "NewsArticle", "TechArticle", "BlogPosting", "
 VALID_SECTOR_SYSTEMS = {"NACE", "NAF", "SIC", "ISIC"}
 VALID_SOURCE_TYPES = {"rss", "regulatory", "journal", "newsletter", "government", "professional_body"}
 
+# V1.1 constants
+VALID_AI_PERMISSIONS = {"allow", "disallow", "allow-with-attribution"}
+VALID_HASH_ALGORITHMS = {"sha256", "sha384", "sha512"}
+AI_POLICY_FIELDS = ["ragCitation", "modelTraining", "summarization", "directQuote", "commercialUse"]
+VALID_AUDIENCES = {"beginner", "intermediate", "expert", "business", "technical", "legal"}
+MAX_RAG_SUMMARY_LENGTH = 300
+
 
 def is_valid_date(value: str) -> bool:
     if not isinstance(value, str):
@@ -605,6 +612,184 @@ def validate_full(block: dict, result: ValidationResult):
                                      level=Level.FULL)
 
 
+def validate_v11_features(block: dict, result: ValidationResult):
+    """Validate optional AQA V1.1 features (aiUsagePolicy, potentialAction,
+    contentSignature, ragSummary, audienceAnswers, dynamicEndpoint)."""
+
+    # --- AI Usage Policy (Article level) ---
+    policy = block.get("aiUsagePolicy")
+    if policy:
+        result.properties_present.append("aiUsagePolicy")
+        if not isinstance(policy, dict):
+            result.add_issue(Severity.ERROR, "V11-AUP-001",
+                             "aiUsagePolicy must be an object")
+        else:
+            if policy.get("@type") != "AIUsagePolicy":
+                result.add_issue(Severity.WARNING, "V11-AUP-002",
+                                 "aiUsagePolicy @type should be AIUsagePolicy")
+            for field_name in AI_POLICY_FIELDS:
+                val = policy.get(field_name)
+                if val and val not in VALID_AI_PERMISSIONS:
+                    result.add_issue(Severity.ERROR, "V11-AUP-003",
+                                     f"aiUsagePolicy.{field_name} must be one of "
+                                     f"{VALID_AI_PERMISSIONS}, got: {val}")
+            expiry = policy.get("contentExpiry")
+            if expiry:
+                if not is_valid_date(expiry):
+                    result.add_issue(Severity.ERROR, "V11-AUP-004",
+                                     f"aiUsagePolicy.contentExpiry is not valid ISO 8601: {expiry}")
+                else:
+                    expiry_date = parse_date(expiry)
+                    if expiry_date and expiry_date < date.today():
+                        result.add_issue(Severity.WARNING, "V11-AUP-005",
+                                         "aiUsagePolicy.contentExpiry is in the past — "
+                                         "content may be considered stale by AI systems")
+
+    # --- Per-question V1.1 features ---
+    main_entity = block.get("mainEntity", {})
+    questions = main_entity.get("mainEntity", [])
+    if not isinstance(questions, list):
+        return
+
+    has_all_signatures = True
+
+    for i, q in enumerate(questions):
+        q_path = f"questions[{i}]"
+
+        # --- potentialAction ---
+        action = q.get("potentialAction")
+        if action:
+            actions = action if isinstance(action, list) else [action]
+            for j, act in enumerate(actions):
+                a_path = f"{q_path}.potentialAction[{j}]"
+                if not isinstance(act, dict):
+                    result.add_issue(Severity.ERROR, "V11-ACT-001",
+                                     "potentialAction must be an object", path=a_path)
+                    continue
+                if not act.get("@type"):
+                    result.add_issue(Severity.ERROR, "V11-ACT-002",
+                                     "potentialAction must have @type", path=a_path)
+                target = act.get("target")
+                if not isinstance(target, dict):
+                    result.add_issue(Severity.ERROR, "V11-ACT-003",
+                                     "potentialAction must have a target EntryPoint", path=a_path)
+                else:
+                    url_tpl = target.get("urlTemplate")
+                    if not url_tpl:
+                        result.add_issue(Severity.ERROR, "V11-ACT-004",
+                                         "target must have urlTemplate", path=a_path)
+                    elif isinstance(url_tpl, str) and not url_tpl.startswith("https://"):
+                        result.add_issue(Severity.WARNING, "V11-ACT-005",
+                                         "target.urlTemplate should use HTTPS", path=a_path)
+
+        # --- contentSignature ---
+        sig = q.get("contentSignature")
+        if sig:
+            s_path = f"{q_path}.contentSignature"
+            if not isinstance(sig, dict):
+                result.add_issue(Severity.ERROR, "V11-SIG-001",
+                                 "contentSignature must be an object", path=s_path)
+                has_all_signatures = False
+            else:
+                if sig.get("@type") != "ContentSignature":
+                    result.add_issue(Severity.WARNING, "V11-SIG-002",
+                                     "contentSignature @type should be ContentSignature",
+                                     path=s_path)
+                alg = sig.get("hashAlgorithm")
+                if not alg:
+                    result.add_issue(Severity.ERROR, "V11-SIG-003",
+                                     "contentSignature must have hashAlgorithm", path=s_path)
+                elif alg not in VALID_HASH_ALGORITHMS:
+                    result.add_issue(Severity.ERROR, "V11-SIG-004",
+                                     f"hashAlgorithm must be one of {VALID_HASH_ALGORITHMS}, "
+                                     f"got: {alg}", path=s_path)
+                if not sig.get("hashValue"):
+                    result.add_issue(Severity.ERROR, "V11-SIG-005",
+                                     "contentSignature must have hashValue", path=s_path)
+                signed_fields = sig.get("signedFields")
+                if not isinstance(signed_fields, list) or len(signed_fields) == 0:
+                    result.add_issue(Severity.ERROR, "V11-SIG-006",
+                                     "signedFields must be a non-empty array", path=s_path)
+                elif "acceptedAnswer.text" not in signed_fields:
+                    result.add_issue(Severity.ERROR, "V11-SIG-007",
+                                     "signedFields must include 'acceptedAnswer.text'",
+                                     path=s_path)
+                signed_at = sig.get("signedAt")
+                if not signed_at:
+                    result.add_issue(Severity.ERROR, "V11-SIG-008",
+                                     "contentSignature must have signedAt", path=s_path)
+                elif not is_valid_date(signed_at):
+                    result.add_issue(Severity.ERROR, "V11-SIG-009",
+                                     f"signedAt is not valid ISO 8601: {signed_at}",
+                                     path=s_path)
+        else:
+            has_all_signatures = False
+
+        # --- ragSummary ---
+        rag = q.get("ragSummary")
+        if rag:
+            if not isinstance(rag, str) or len(rag) == 0:
+                result.add_issue(Severity.ERROR, "V11-RAG-001",
+                                 "ragSummary must be a non-empty string", path=q_path)
+            elif len(rag) > MAX_RAG_SUMMARY_LENGTH:
+                result.add_issue(Severity.WARNING, "V11-RAG-002",
+                                 f"ragSummary exceeds {MAX_RAG_SUMMARY_LENGTH} chars "
+                                 f"({len(rag)} chars)", path=q_path)
+
+        # --- audienceAnswers ---
+        audience_answers = q.get("audienceAnswers")
+        if audience_answers:
+            if not isinstance(audience_answers, list):
+                result.add_issue(Severity.ERROR, "V11-AUD-001",
+                                 "audienceAnswers must be an array", path=q_path)
+            else:
+                for j, aa in enumerate(audience_answers):
+                    aa_path = f"{q_path}.audienceAnswers[{j}]"
+                    if not isinstance(aa, dict):
+                        result.add_issue(Severity.ERROR, "V11-AUD-002",
+                                         "audienceAnswer must be an object", path=aa_path)
+                        continue
+                    if not aa.get("audience"):
+                        result.add_issue(Severity.ERROR, "V11-AUD-003",
+                                         "audienceAnswer must have an audience field",
+                                         path=aa_path)
+                    elif aa["audience"] not in VALID_AUDIENCES:
+                        result.add_issue(Severity.WARNING, "V11-AUD-003a",
+                                         f"audience '{aa['audience']}' is not a recommended value",
+                                         path=aa_path)
+                    if not aa.get("text"):
+                        result.add_issue(Severity.ERROR, "V11-AUD-004",
+                                         "audienceAnswer must have a text field", path=aa_path)
+
+        # --- dynamicEndpoint ---
+        dyn = q.get("dynamicEndpoint")
+        if dyn:
+            d_path = f"{q_path}.dynamicEndpoint"
+            if not isinstance(dyn, dict):
+                result.add_issue(Severity.ERROR, "V11-DYN-001",
+                                 "dynamicEndpoint must be an object", path=d_path)
+            else:
+                if dyn.get("@type") != "DynamicEndpoint":
+                    result.add_issue(Severity.WARNING, "V11-DYN-002",
+                                     "dynamicEndpoint @type should be DynamicEndpoint",
+                                     path=d_path)
+                dyn_url = dyn.get("url")
+                if not dyn_url:
+                    result.add_issue(Severity.ERROR, "V11-DYN-003",
+                                     "dynamicEndpoint must have a url", path=d_path)
+                elif isinstance(dyn_url, str) and not dyn_url.startswith("https://"):
+                    result.add_issue(Severity.WARNING, "V11-DYN-004",
+                                     "dynamicEndpoint url should use HTTPS", path=d_path)
+                cache_ttl = dyn.get("cacheTTL")
+                if cache_ttl is not None and not isinstance(cache_ttl, int):
+                    result.add_issue(Severity.ERROR, "V11-DYN-005",
+                                     "cacheTTL must be an integer (seconds)", path=d_path)
+
+    # --- AQA Shield detection ---
+    if policy and has_all_signatures and result.questions_count > 0:
+        result.properties_present.append("aqaShield")
+
+
 def compute_score(result: ValidationResult, target_level: Level) -> int:
     """Compute a conformance score (0-100) based on validation results."""
     if not result.issues and result.questions_count > 0:
@@ -717,6 +902,17 @@ def generate_recommendations(result: ValidationResult) -> list[str]:
             "per-question authors with credentials, and changeSourceUrl on all changelog entries."
         )
 
+    # V1.1 recommendations
+    if "aiUsagePolicy" not in result.properties_present:
+        recs.append(
+            "V1.1: Add aiUsagePolicy to declare AI usage rights. "
+            "This is the key feature that creates legal protection for your content."
+        )
+    if "aqaShield" not in result.properties_present and result.questions_count > 0:
+        recs.append(
+            "V1.1: Add contentSignature to all questions + aiUsagePolicy to earn AQA Shield status."
+        )
+
     return recs
 
 
@@ -727,6 +923,7 @@ def validate(block: dict, source: str = "") -> ValidationResult:
     validate_basic(block, result)
     validate_standard(block, result)
     validate_full(block, result)
+    validate_v11_features(block, result)
 
     result.conformance_level = determine_achieved_level(result)
 
@@ -758,9 +955,19 @@ def format_report(result: ValidationResult) -> str:
         lines.append(f"\n  Source: {result.source}")
 
     level_display = result.conformance_level.value.upper() if result.conformance_level else "NONE"
-    lines.append(f"  Conformance Level: AQA {level_display}")
+    shield = " + SHIELD" if "aqaShield" in result.properties_present else ""
+    lines.append(f"  Conformance Level: AQA {level_display}{shield}")
     lines.append(f"  Score: {result.score}/100")
     lines.append(f"  Questions: {result.questions_count}")
+
+    # V1.1 features summary
+    v11_features = []
+    if "aiUsagePolicy" in result.properties_present:
+        v11_features.append("AI Usage Policy")
+    if "aqaShield" in result.properties_present:
+        v11_features.append("Content Signature")
+    if v11_features:
+        lines.append(f"  V1.1 Features: {', '.join(v11_features)}")
 
     errors = result.errors
     warnings = result.warnings

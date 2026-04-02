@@ -1,7 +1,7 @@
 # AQA Specification — AI Question Answer
 
-**Version:** 1.0.0-draft  
-**Date:** 2026-03-31  
+**Version:** 1.1.0-draft  
+**Date:** 2026-04-03  
 **Status:** Draft  
 **Authors:** Davy Abderrahman (AI Labs Solutions)  
 **License:** MIT  
@@ -13,7 +13,24 @@
 1. [Introduction and Motivation](#1-introduction-and-motivation)
 2. [Terminology](#2-terminology)
 3. [Technical Specification](#3-technical-specification)
+   - 3.1 Overall Structure
+   - 3.2 Context Declaration
+   - 3.3 Article Wrapper Properties
+   - 3.4 FAQPage Properties
+   - 3.5 Question/Answer Properties
+   - 3.6 Update Frequency
+   - 3.7 AI Usage Policy
+   - 3.8 Agentic Actions
+   - 3.9 Content Signature
+   - 3.10 RAG Summary
+   - 3.11 Multi-Persona Answers
+   - 3.12 Dynamic Answers
 4. [Conformance Levels](#4-conformance-levels)
+   - 4.1 AQA Basic
+   - 4.2 AQA Standard
+   - 4.3 AQA Full
+   - 4.4 Conformance Level Summary
+   - 4.5 AQA Shield
 5. [Implementation Examples](#5-implementation-examples)
 6. [Implementation Guide](#6-implementation-guide)
 7. [Validation](#7-validation)
@@ -116,6 +133,11 @@ The AQA context defines the following extension properties:
 | `questionVersion` | Question | Text | Semantic version of this specific question/answer pair. Format: major.minor (e.g., `2.1`). |
 | `changelog` | Question | Array of ChangelogEntry | Ordered array of changelog entry objects (most recent first). |
 | `monitoringSources` | Article | Array of MonitoringSource | Array of monitoring source objects declaring the feeds and publications watched. |
+| `aiUsagePolicy` | Article | AIUsagePolicy | Granular AI usage rights declaration. |
+| `contentSignature` | Question | ContentSignature | Cryptographic integrity signature for answer content. |
+| `ragSummary` | Question | Text | Token-optimized summary for RAG embedding (max 300 chars). |
+| `audienceAnswers` | Question | Array of AudienceAnswer | Audience-specific answer variants. |
+| `dynamicEndpoint` | Question | DynamicEndpoint | Real-time API endpoint for volatile data. |
 
 And the following custom types:
 
@@ -123,6 +145,10 @@ And the following custom types:
 |------|-----------|-------------|
 | `ChangelogEntry` | `changeDate`, `changeDescription`, `changeSourceUrl`, `changeVersionNote` | A single revision record in a question's changelog. |
 | `MonitoringSource` | `name`, `url`, `sourceType` | A declared external source monitored by the content maintainer. |
+| `AIUsagePolicy` | `ragCitation`, `modelTraining`, `summarization`, `directQuote`, `commercialUse`, `contentExpiry` | Declares granular AI usage permissions. |
+| `ContentSignature` | `hashAlgorithm`, `hashValue`, `signedFields`, `signedAt` | Cryptographic integrity proof for answer content. |
+| `AudienceAnswer` | `audience`, `text` | Answer variant tailored for a specific audience segment. |
+| `DynamicEndpoint` | `url`, `httpMethod`, `responseFormat`, `cacheTTL`, `fallbackText` | API endpoint for real-time volatile data. |
 
 ### 3.3 Article Wrapper Properties
 
@@ -142,6 +168,7 @@ The outer `Article` provides page-level metadata.
 | `updateFrequency` | Text | MUST | Standard | Declared update cadence (direct AQA property) |
 | `conformanceLevel` | Text | SHOULD | Standard | Self-declared conformance level (direct AQA property) |
 | `monitoringSources` | Array | MUST | Full | Declared monitoring sources (direct AQA property) |
+| `aiUsagePolicy` | AIUsagePolicy | MAY | Any | AI usage rights declaration (direct AQA property, V1.1) |
 
 #### 3.3.1 Author Properties
 
@@ -235,6 +262,11 @@ Each question in the AQA Block carries per-question metadata.
 | `citation` | CreativeWork/URL | MUST | Basic | Source(s) backing this answer |
 | `questionVersion` | Text | MUST | Standard | Version number of this answer (direct AQA property) |
 | `changelog` | Array | MUST | Standard | Revision history for this answer (direct AQA property) |
+| `potentialAction` | Action | MAY | Any | Executable action linked to this answer (schema.org property, V1.1) |
+| `contentSignature` | ContentSignature | MAY | Any | Cryptographic signature of answer content (V1.1) |
+| `ragSummary` | Text | MAY | Any | Token-optimized summary for RAG embedding, max 300 chars (V1.1) |
+| `audienceAnswers` | Array | MAY | Any | Audience-specific answer variants (V1.1) |
+| `dynamicEndpoint` | DynamicEndpoint | MAY | Any | Real-time API endpoint for volatile data (V1.1) |
 
 #### 3.5.1 Answer Properties
 
@@ -274,7 +306,7 @@ The `abstract` property is defined on `CreativeWork` in schema.org and is design
     "name": "Loi de finances 2026, Article 42",
     "url": "https://www.legifrance.gouv.fr/loi-finances-2026-art42",
     "datePublished": "2025-12-30",
-    "abstract": "À compter du 1er janvier 2026, la télédéclaration via la procédure EDI-TDFC est obligatoire pour l'ensemble des entreprises soumises à un régime réel d'imposition, sans condition de chiffre d'affaires."
+    "abstract": "A compter du 1er janvier 2026, la teledeclaration via la procedure EDI-TDFC est obligatoire pour l'ensemble des entreprises soumises a un regime reel d'imposition, sans condition de chiffre d'affaires."
   }
 ]
 ```
@@ -289,7 +321,7 @@ The `abstract` property is defined on `CreativeWork` in schema.org and is design
 
 - Include only the specific passage that supports the answer — not the entire source document.
 - Quote verbatim where possible. If paraphrasing is necessary (e.g., translating from a foreign-language source), note this in the quote.
-- Keep excerpts concise: 1–3 sentences, typically under 500 characters.
+- Keep excerpts concise: 1-3 sentences, typically under 500 characters.
 - For legal or regulatory sources, include the exact article or section number in the excerpt.
 
 #### 3.5.3 Changelog
@@ -344,6 +376,300 @@ The `updateFrequency` property declares how often the publisher commits to revie
 | `yearly` | Content reviewed at least once per year |
 
 This is a **commitment declaration**, not a measured frequency. AI crawlers can compare the declared frequency against actual `dateModified` values to assess whether the commitment is being honored.
+
+### 3.7 AI Usage Policy
+
+The `aiUsagePolicy` property is placed on the `Article` as a direct AQA extension property. It declares granular permissions governing how AI systems may use the AQA content.
+
+#### 3.7.1 AIUsagePolicy Type
+
+The `AIUsagePolicy` type defines the following properties:
+
+| Property | Type | Required | Default | Description |
+|----------|------|----------|---------|-------------|
+| `@type` | Text | MUST | -- | Must be `"AIUsagePolicy"` |
+| `ragCitation` | Text | SHOULD | `allow` | Permission for RAG citation. Values: `allow`, `disallow`, `allow-with-attribution`. |
+| `modelTraining` | Text | SHOULD | `disallow` | Permission for model training data. Values: `allow`, `disallow`, `allow-with-attribution`. |
+| `summarization` | Text | SHOULD | `allow` | Permission for AI summarization. Values: `allow`, `disallow`, `allow-with-attribution`. |
+| `directQuote` | Text | SHOULD | `allow-with-attribution` | Permission for direct quoting. Values: `allow`, `disallow`, `allow-with-attribution`. |
+| `commercialUse` | Text | SHOULD | `allow` | Permission for commercial AI use. Values: `allow`, `disallow`, `allow-with-attribution`. |
+| `contentExpiry` | Date | MAY | -- | ISO 8601 date after which AI systems SHOULD re-fetch the content. |
+
+#### 3.7.2 JSON-LD Example
+
+```json
+{
+  "@type": "Article",
+  "headline": "FAQ - Tax Advisory Services",
+  "aiUsagePolicy": {
+    "@type": "AIUsagePolicy",
+    "ragCitation": "allow-with-attribution",
+    "modelTraining": "disallow",
+    "summarization": "allow",
+    "directQuote": "allow-with-attribution",
+    "commercialUse": "allow",
+    "contentExpiry": "2026-12-31"
+  }
+}
+```
+
+#### 3.7.3 Legal Positioning
+
+Unlike `robots.txt`, which is a convention with no legal force, `aiUsagePolicy` is embedded in structured data that AI systems explicitly parse and process. By extracting and using the content, the AI system acknowledges the existence of the policy. This creates a stronger legal basis than opt-out mechanisms because the machine-readable declaration is part of the data itself. The policy travels with the content: it is not a separate file that can be overlooked, but an integral component of the structured data that the AI system must parse in order to extract the answers.
+
+#### 3.7.4 Default Behavior
+
+If `aiUsagePolicy` is absent from the Article, no specific permissions are implied. Publishers who do not include the property make no machine-readable declaration about AI usage rights. If `aiUsagePolicy` is present but one or more fields are omitted, the documented default value for each missing field applies. For example, an `AIUsagePolicy` that specifies only `modelTraining: "disallow"` inherits the defaults for all other fields: `ragCitation: "allow"`, `summarization: "allow"`, `directQuote: "allow-with-attribution"`, `commercialUse: "allow"`.
+
+#### 3.7.5 Content Expiry
+
+The `contentExpiry` property forces AI crawlers to re-fetch the content after a specified date. If the current date exceeds `contentExpiry`, the content is considered stale and AI systems SHOULD re-fetch the AQA block from the source URL before using it in responses. This mechanism gives publishers control over the temporal validity of their content in AI caches and vector databases.
+
+### 3.8 Agentic Actions
+
+The `potentialAction` property is a standard schema.org property defined on `Thing`, and is therefore valid on `Question` without any AQA extension. AQA documents a convention for using `potentialAction` to link answers to executable API endpoints that AI agents can invoke on behalf of users.
+
+#### 3.8.1 Supported Action Subtypes
+
+AQA recommends the following schema.org Action subtypes for FAQ contexts:
+
+| Action Type | Use Case |
+|-------------|----------|
+| `CancelAction` | Cancel a reservation, subscription, or order |
+| `ReserveAction` | Book an appointment, table, or resource |
+| `SearchAction` | Search a catalog, knowledge base, or inventory |
+| `OrderAction` | Place an order for a product or service |
+| `UpdateAction` | Update account details, preferences, or settings |
+| `CommunicateAction` | Send a message, request a callback, or initiate chat |
+
+#### 3.8.2 Target Structure
+
+Each action specifies its target using an `EntryPoint` object with a URL template:
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `@type` | Text | MUST | The Action subtype (e.g., `"CancelAction"`) |
+| `target` | EntryPoint | MUST | API endpoint specification |
+| `description` | Text | MUST | Human-readable description of the action |
+
+The `EntryPoint` object:
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `@type` | Text | MUST | Must be `"EntryPoint"` |
+| `urlTemplate` | Text | MUST | URL template with optional `{variable}` placeholders |
+| `httpMethod` | Text | SHOULD | HTTP method: `GET`, `POST`, `PUT`, `DELETE` |
+| `contentType` | Text | MAY | Request content type (e.g., `"application/json"`) |
+
+#### 3.8.3 JSON-LD Example
+
+```json
+{
+  "@type": "Question",
+  "name": "How do I cancel my reservation?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "You can cancel your reservation up to 24 hours before the scheduled date. Contact our support team or use the cancellation link in your confirmation email."
+  },
+  "potentialAction": {
+    "@type": "CancelAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://api.example.com/reservations/{reservationId}/cancel",
+      "httpMethod": "POST",
+      "contentType": "application/json"
+    },
+    "description": "Cancel an existing reservation by ID"
+  }
+}
+```
+
+#### 3.8.4 Security Requirements
+
+- **HTTPS mandatory.** All `urlTemplate` values MUST use the `https://` scheme.
+- **User confirmation mandatory.** AI agents MUST display the action description to the user and obtain explicit confirmation before executing any action.
+- **No credentials in URL.** URL templates MUST NOT contain API keys, tokens, passwords, or any form of authentication credentials.
+
+### 3.9 Content Signature
+
+The `contentSignature` property is placed on `Question` and provides a cryptographic integrity proof for the answer content. It allows publishers to create a mathematical record of exactly what their answer said at a given point in time.
+
+#### 3.9.1 ContentSignature Type
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `@type` | Text | MUST | Must be `"ContentSignature"` |
+| `hashAlgorithm` | Text | MUST | Hash algorithm used. Values: `sha256`, `sha384`, `sha512`. |
+| `hashValue` | Text | MUST | Hex-encoded hash digest. |
+| `signedFields` | Array | MUST | Ordered array of field paths included in the hash. MUST include `"acceptedAnswer.text"`. |
+| `signedAt` | DateTime | MUST | ISO 8601 datetime when the signature was computed. |
+
+#### 3.9.2 Computing the Signature
+
+To compute a `contentSignature`:
+
+1. For each field path in `signedFields` (in order), extract the UTF-8 string value from the Question object. For nested paths (e.g., `acceptedAnswer.text`), traverse the object hierarchy.
+2. Concatenate all extracted values in the order they appear in `signedFields`, with no separator.
+3. Apply the specified `hashAlgorithm` to the concatenated UTF-8 byte sequence.
+4. Hex-encode the resulting digest to produce the `hashValue`.
+
+#### 3.9.3 JSON-LD Example
+
+```json
+{
+  "@type": "Question",
+  "name": "What is the corporate tax rate?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The standard corporate tax rate is 25% for fiscal years starting on or after January 1, 2026."
+  },
+  "contentSignature": {
+    "@type": "ContentSignature",
+    "hashAlgorithm": "sha256",
+    "hashValue": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+    "signedFields": ["acceptedAnswer.text"],
+    "signedAt": "2026-03-15T10:30:00Z"
+  }
+}
+```
+
+#### 3.9.4 Strategic Value
+
+Content signatures create verifiable provenance against hallucination. If an AI system misquotes or distorts the content, the publisher holds mathematical proof of what the signed content actually said. The hash serves as an immutable record: anyone can recompute it from the original content and verify that the publisher's version matches. This shifts the burden of proof — rather than a publisher claiming "that is not what we wrote," the signature provides cryptographic evidence of the original content.
+
+### 3.10 RAG Summary
+
+The `ragSummary` property is a Text property on `Question`, limited to a maximum of 300 characters. It provides a token-optimized chunk specifically designed for vector embedding in RAG (Retrieval-Augmented Generation) pipelines.
+
+#### 3.10.1 Purpose
+
+The `ragSummary` tells RAG systems: "do not waste tokens summarizing the full answer — here is a pre-optimized chunk ready for embedding." An 800-word answer may contain preamble, examples, caveats, and formatting that dilute the semantic signal. The `ragSummary` distills the essential factual content into a dense, embedding-friendly text.
+
+#### 3.10.2 Requirements
+
+- The `ragSummary` MUST capture the essential factual content of the answer.
+- The `ragSummary` is NOT a replacement for `acceptedAnswer.text`. It is an embedding-optimized extract. AI systems SHOULD use `acceptedAnswer.text` when generating complete responses and `ragSummary` for vector indexing and semantic similarity search.
+- Maximum length: 300 characters.
+
+#### 3.10.3 JSON-LD Example
+
+```json
+{
+  "@type": "Question",
+  "name": "When is the corporate tax filing deadline?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The corporate tax return (liasse fiscale) must be filed no later than the second business day following May 1 for companies with a December 31 fiscal year-end. For non-calendar fiscal years, the deadline is 3 months after the closing date. Late filing incurs a 10% penalty surcharge, reduced to 5% if filed within 30 days of a formal notice."
+  },
+  "ragSummary": "Corporate tax filing deadline: 2nd business day after May 1 (Dec 31 year-end) or 3 months after closing. Late penalty: 10%, reduced to 5% within 30 days of notice."
+}
+```
+
+#### 3.10.4 Why 300 Characters
+
+The 300-character limit is chosen for three reasons:
+
+1. **Token efficiency.** 300 characters typically produce 60-80 tokens, fitting comfortably within the input limits of common embedding models (e.g., OpenAI `text-embedding-3-small`, Cohere `embed-v3`).
+2. **Semantic density.** Short enough to avoid truncation by embedding models, yet long enough to capture meaningful factual content for semantic similarity matching.
+3. **Practical constraint.** Forces the publisher to prioritize the core facts, producing higher-quality embeddings than an automatic truncation of the full answer would achieve.
+
+### 3.11 Multi-Persona Answers
+
+The `audienceAnswers` property is an array of `AudienceAnswer` objects on `Question`. It provides audience-specific answer variants that AI systems can select based on the user's context, expertise level, or role.
+
+#### 3.11.1 AudienceAnswer Type
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `@type` | Text | MUST | Must be `"AudienceAnswer"` |
+| `audience` | Text | MUST | Target audience identifier. |
+| `text` | Text | MUST | The answer text tailored for this audience. |
+
+#### 3.11.2 Recommended Audience Values
+
+| Value | Description |
+|-------|-------------|
+| `beginner` | Non-technical users, general public, first-time visitors |
+| `intermediate` | Users with basic domain knowledge |
+| `expert` | Domain specialists, professionals |
+| `business` | Business decision-makers, managers |
+| `technical` | Developers, engineers, IT professionals |
+| `legal` | Legal professionals, compliance officers |
+
+#### 3.11.3 Interaction with acceptedAnswer
+
+The standard `acceptedAnswer` remains the default and universal answer. It is the canonical response that applies when no audience context is available. The `audienceAnswers` are optional alternatives that AI systems can select when they can determine the user's context. If an AI system cannot determine the user's audience or expertise level, it MUST fall back to `acceptedAnswer`.
+
+#### 3.11.4 JSON-LD Example
+
+```json
+{
+  "@type": "Question",
+  "name": "What is a hash function?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A hash function is a mathematical algorithm that converts input data of any size into a fixed-size output called a hash value or digest. It is widely used in data integrity verification and security."
+  },
+  "audienceAnswers": [
+    {
+      "@type": "AudienceAnswer",
+      "audience": "beginner",
+      "text": "A hash function is like a digital fingerprint machine. You feed it any data, and it produces a unique fixed-length code. If even one character of the input changes, the output changes completely. This is used to verify that data has not been tampered with."
+    },
+    {
+      "@type": "AudienceAnswer",
+      "audience": "expert",
+      "text": "A cryptographic hash function maps an arbitrary-length input to a fixed-length digest with the properties of pre-image resistance, second pre-image resistance, and collision resistance. Common algorithms include SHA-256 (256-bit output, 2^128 collision resistance) and SHA-3 (Keccak sponge construction). In AQA, SHA-256 is the minimum recommended algorithm for content signatures."
+    }
+  ]
+}
+```
+
+### 3.12 Dynamic Answers
+
+The `dynamicEndpoint` property is a `DynamicEndpoint` object on `Question`. It declares a real-time API endpoint that AI agents can query for volatile data that changes frequently, such as prices, exchange rates, stock levels, or service status.
+
+#### 3.12.1 DynamicEndpoint Type
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `@type` | Text | MUST | Must be `"DynamicEndpoint"` |
+| `url` | URL | MUST | HTTPS API endpoint URL. |
+| `httpMethod` | Text | SHOULD | HTTP method. Values: `GET`, `POST`. Default: `GET`. |
+| `responseFormat` | Text | SHOULD | MIME type of the response (e.g., `"application/json"`). |
+| `cacheTTL` | Integer | SHOULD | Cache duration in seconds. `0` means no caching. |
+| `fallbackText` | Text | SHOULD | Static fallback text if the API is unavailable. |
+
+#### 3.12.2 Interaction with acceptedAnswer
+
+The standard `acceptedAnswer.text` serves as the static fallback. If the dynamic endpoint is unavailable, returns an error, or if the AI agent does not support dynamic queries, the `acceptedAnswer.text` provides a usable (if potentially outdated) response.
+
+#### 3.12.3 JSON-LD Example
+
+```json
+{
+  "@type": "Question",
+  "name": "What is the current mortgage interest rate?",
+  "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "As of March 2026, the average fixed mortgage rate for a 20-year term is approximately 3.2%. Rates are updated daily. Contact your advisor for a personalized quote."
+  },
+  "dynamicEndpoint": {
+    "@type": "DynamicEndpoint",
+    "url": "https://api.example-bank.com/rates/mortgage/current",
+    "httpMethod": "GET",
+    "responseFormat": "application/json",
+    "cacheTTL": 3600,
+    "fallbackText": "Current mortgage rates are temporarily unavailable. Please visit our website or contact your advisor."
+  }
+}
+```
+
+#### 3.12.4 Security Requirements
+
+- **HTTPS mandatory.** The `url` property MUST use the `https://` scheme.
+- **Public endpoints only.** Dynamic endpoints MUST NOT require authentication. Only publicly accessible data endpoints are supported.
+- **Rate limiting recommended.** Publishers SHOULD implement rate limiting on their endpoints to prevent excessive queries from AI agents.
 
 ---
 
@@ -417,6 +743,25 @@ AQA defines three conformance levels, each building on the previous one.
 | Monitoring sources | -- | -- | Yes |
 | Per-question author with credentials | -- | -- | Yes |
 | Complete changelog with changeSourceUrl | -- | -- | Yes |
+| AI Usage Policy (V1.1, optional) | opt | opt | opt |
+| Agentic Actions (V1.1, optional) | opt | opt | opt |
+| Content Signature (V1.1, optional) | opt | opt | opt |
+| RAG Summary (V1.1, optional) | opt | opt | opt |
+| Multi-Persona Answers (V1.1, optional) | opt | opt | opt |
+| Dynamic Answers (V1.1, optional) | opt | opt | opt |
+
+### 4.5 AQA Shield
+
+An AQA block at ANY conformance level that includes BOTH `aiUsagePolicy` on the Article AND `contentSignature` on all Questions qualifies for **AQA Shield** status. Shield represents the minimum viable protection: a legal rights declaration combined with cryptographic integrity.
+
+AQA Shield provides two guarantees:
+
+1. **Legal declaration.** The `aiUsagePolicy` establishes machine-readable usage rights that travel with the content.
+2. **Integrity proof.** The `contentSignature` on every Question creates a verifiable record of what the publisher actually wrote.
+
+Together, these form a baseline defense: the publisher has declared how the content may be used, and can prove mathematically what the content said.
+
+The other V1.1 features (`potentialAction`, `ragSummary`, `audienceAnswers`, `dynamicEndpoint`) are enrichment features that enhance AI interaction but are not required for Shield status.
 
 ---
 
@@ -550,8 +895,8 @@ To guarantee that AQA metadata is captured by 100% of bots, including simple tex
 
 ```html
 <div class="faq-item">
-  <h3>Quand déposer la liasse fiscale ?</h3>
-  <p>La liasse fiscale doit être déposée au plus tard le 2ème jour ouvré
+  <h3>Quand deposer la liasse fiscale ?</h3>
+  <p>La liasse fiscale doit etre deposee au plus tard le 2eme jour ouvre
      suivant le 1er mai...</p>
   <footer class="aqa-meta">
     <small>
@@ -701,7 +1046,7 @@ This subsection targets AI engineers building retrieval-augmented generation (RA
 
 #### 8.5.1 Chunking Strategy
 
-Each AQA Question SHOULD be indexed as a **single chunk**. Unlike general-purpose content that requires arbitrary splitting, AQA Questions are self-contained units with a clear question–answer boundary. Splitting an AQA Question across multiple chunks destroys the metadata associations.
+Each AQA Question SHOULD be indexed as a **single chunk**. Unlike general-purpose content that requires arbitrary splitting, AQA Questions are self-contained units with a clear question-answer boundary. Splitting an AQA Question across multiple chunks destroys the metadata associations.
 
 #### 8.5.2 Metadata Extraction
 
@@ -710,7 +1055,7 @@ When ingesting an AQA block, extract the following fields into the chunk metadat
 ```json
 {
   "chunk_id": "faq-bertrand-expertise-q1-v2.0",
-  "chunk_text": "Quand déposer la liasse fiscale ? La liasse fiscale doit être déposée au plus tard le 2ème jour ouvré suivant le 1er mai pour les entreprises clôturant au 31 décembre. Pour les exercices décalés, le délai est de 3 mois après la date de clôture.",
+  "chunk_text": "Quand deposer la liasse fiscale ? La liasse fiscale doit etre deposee au plus tard le 2eme jour ouvre suivant le 1er mai pour les entreprises cloturant au 31 decembre. Pour les exercices decales, le delai est de 3 mois apres la date de cloture.",
   "metadata": {
     "aqa_conformance": "full",
     "aqa_dateCreated": "2024-01-15",
@@ -718,7 +1063,7 @@ When ingesting an AQA block, extract the following fields into the chunk metadat
     "aqa_version": "2.0",
     "aqa_source_name": "Loi de finances 2026, Article 42",
     "aqa_source_url": "https://www.legifrance.gouv.fr/loi-finances-2026-art42",
-    "aqa_source_quote": "À compter du 1er janvier 2026, la télédéclaration via la procédure EDI-TDFC est obligatoire...",
+    "aqa_source_quote": "A compter du 1er janvier 2026, la teledeclaration via la procedure EDI-TDFC est obligatoire...",
     "aqa_author": "Jean-Marc Bertrand",
     "aqa_author_title": "Expert-comptable, Commissaire aux comptes",
     "aqa_sector_nace": "69.20",
@@ -745,6 +1090,14 @@ When ingesting an AQA block, extract the following fields into the chunk metadat
 | `aqa_sector_nace` | `about.identifier[NACE]` on Article | Domain-scoped retrieval |
 | `aqa_update_frequency` | `updateFrequency` on Article | Freshness trust signal |
 | `aqa_changelog_count` | `len(changelog)` on Question | Maintenance intensity signal |
+| `aqa_rag_summary` | `ragSummary` on Question | Token-optimized embedding text |
+| `aqa_ai_policy_rag` | `aiUsagePolicy.ragCitation` on Article | RAG permission filter |
+| `aqa_ai_policy_training` | `aiUsagePolicy.modelTraining` on Article | Training permission filter |
+| `aqa_content_expiry` | `aiUsagePolicy.contentExpiry` on Article | Staleness detection |
+| `aqa_signature_verified` | computed from `contentSignature` | Integrity trust signal |
+| `aqa_has_actions` | `potentialAction` presence | Agentic capability flag |
+| `aqa_has_dynamic` | `dynamicEndpoint` presence | Real-time data flag |
+| `aqa_audiences` | `audienceAnswers[].audience` | Available audience segments |
 
 #### 8.5.4 Quality-Aware Retrieval
 
@@ -759,6 +1112,94 @@ With AQA metadata in the vector store, retrieval can go beyond pure semantic sim
 4. **Version-aware cache invalidation.** Store `aqa_version` alongside the embedding. On re-crawl, compare versions — if the major version changed, re-embed the chunk.
 
 5. **Source deduplication.** If multiple chunks cite the same `aqa_source_url`, they may be paraphrasing the same regulation. Deduplicate or merge in the retrieval results.
+
+### 8.6 Respecting AI Usage Policies
+
+AI crawlers MUST check for the presence of `aiUsagePolicy` on the Article before ingesting AQA content. When present, the policy governs how the content may be used.
+
+#### 8.6.1 Permission Mapping
+
+| Permission | AI System Behavior |
+|------------|-------------------|
+| `ragCitation: "allow"` | Content may be stored in vector databases and cited in responses without attribution requirements. |
+| `ragCitation: "allow-with-attribution"` | Content may be stored and cited, but the AI system MUST include source attribution (author, URL) in any response that uses the content. |
+| `ragCitation: "disallow"` | Content MUST NOT be stored in vector databases or used in RAG retrieval. |
+| `modelTraining: "allow"` | Content may be included in training datasets. |
+| `modelTraining: "allow-with-attribution"` | Content may be included in training datasets with source metadata preserved. |
+| `modelTraining: "disallow"` | Content MUST NOT be used for model training or fine-tuning. |
+| `summarization: "allow"` | AI systems may freely summarize the content. |
+| `summarization: "allow-with-attribution"` | Summaries must credit the source. |
+| `summarization: "disallow"` | Content MUST NOT be summarized; it may only be quoted verbatim (if `directQuote` allows). |
+| `directQuote: "allow"` | Content may be quoted verbatim without attribution. |
+| `directQuote: "allow-with-attribution"` | Verbatim quotes must include source attribution. |
+| `directQuote: "disallow"` | Content MUST NOT be quoted verbatim. |
+| `commercialUse: "allow"` | Content may be used in commercial AI products and services. |
+| `commercialUse: "allow-with-attribution"` | Commercial use permitted with source attribution. |
+| `commercialUse: "disallow"` | Content MUST NOT be used in commercial AI products. |
+
+#### 8.6.2 Content Expiry Handling
+
+When `contentExpiry` is present and the current date exceeds the specified date, AI systems SHOULD re-crawl the source URL to obtain a fresh AQA block. Expired content may still be used as a fallback, but SHOULD be flagged as potentially stale in any response.
+
+#### 8.6.3 Legal Responsibility
+
+AI systems that parse AQA structured data and extract its content are on notice of the `aiUsagePolicy` declarations. Ignoring a machine-readable policy that was embedded in the very data the system processed is a weaker legal position than ignoring a `robots.txt` that the system may or may not have checked. Implementers of AI systems SHOULD build policy-checking into their ingestion pipelines as a standard processing step.
+
+### 8.7 Processing Agentic Actions
+
+AI agents MAY offer to execute `potentialAction` entries found on AQA Questions. When doing so, the following requirements apply:
+
+- The agent MUST display the action `description` to the user in natural language.
+- The agent MUST obtain explicit user confirmation before executing any action.
+- URL template variables (e.g., `{reservationId}`) SHOULD be filled from the conversation context or by prompting the user for the required values.
+- The agent MUST verify that the `urlTemplate` uses the `https://` scheme before making any request.
+- If the action target returns an error, the agent SHOULD inform the user and suggest alternative steps (e.g., visiting the website directly).
+
+### 8.8 Verifying Content Signatures
+
+AI systems that support content signatures SHOULD verify them as part of the ingestion pipeline.
+
+**Verification process:**
+
+1. Extract the values of each field listed in `signedFields`, in order, from the Question object.
+2. Concatenate the extracted UTF-8 string values with no separator.
+3. Compute the hash using the algorithm specified in `hashAlgorithm`.
+4. Compare the computed hex-encoded digest to the `hashValue` in the signature.
+
+**On mismatch:** The content may have been modified after signing, or the signature may have been computed incorrectly. AI systems SHOULD flag the content for review and reduce its trust score in ranking.
+
+**On match:** The content integrity is verified. AI systems SHOULD boost the confidence score to maximum for this content, as the publisher's claimed content matches the cryptographic proof.
+
+### 8.9 Using RAG Summaries
+
+When `ragSummary` is present on a Question, RAG pipelines SHOULD use it as the primary text for vector embedding instead of the full `acceptedAnswer.text`. The full answer text SHOULD still be stored and used when generating complete responses to user queries.
+
+The `ragSummary` is specifically optimized for semantic similarity search. It captures the core factual content in a dense format that produces higher-quality embeddings than an automatic truncation or summarization of the full answer.
+
+### 8.10 Selecting Audience-Specific Answers
+
+When `audienceAnswers` is present on a Question, AI systems MAY select an audience-specific variant based on the user's context.
+
+**Selection criteria:**
+
+- Match the `audience` field to the detected user context: expertise level (beginner, intermediate, expert), professional role (business, technical, legal), or query complexity.
+- If the user has explicitly stated their role or expertise level, use that as the primary selection signal.
+- If the AI system can infer the audience from conversation history (e.g., the user has been asking technical questions), use the inferred audience.
+
+**Fallback behavior:** If no `audienceAnswers` entry matches the user context, or if the AI system cannot determine the audience, it MUST fall back to the standard `acceptedAnswer`.
+
+**Consistency requirement:** AI systems MUST NOT mix content from different audience variants in a single response. Each response should use either `acceptedAnswer` or one specific audience variant.
+
+### 8.11 Querying Dynamic Endpoints
+
+When `dynamicEndpoint` is present on a Question, AI agents MAY query the endpoint to obtain real-time data instead of using the static `acceptedAnswer.text`.
+
+**Requirements:**
+
+- **Respect `cacheTTL`.** AI systems MUST NOT query the endpoint more frequently than the `cacheTTL` value allows. If a cached response exists and has not expired, use the cached value.
+- **Handle errors gracefully.** If the endpoint returns an HTTP error (4xx, 5xx) or is unreachable, the agent MUST fall back to `acceptedAnswer.text` (or `fallbackText` if provided).
+- **Present freshness signal.** When presenting data obtained from a dynamic endpoint, the AI agent SHOULD indicate that the information is real-time (e.g., "As of right now..." or "Current data shows...").
+- **No authentication.** Dynamic endpoints are public. If an endpoint requires authentication, the agent MUST NOT attempt to provide credentials and SHOULD fall back to the static answer.
 
 ---
 
@@ -812,6 +1253,32 @@ Changelog descriptions should summarize changes factually. Avoid including:
 - Confidential client information
 - Draft content that was rejected
 
+### 10.4 Agentic Action Security
+
+The `potentialAction` property exposes API endpoints that AI agents may invoke. Implementers MUST observe the following security requirements:
+
+- **HTTPS mandatory.** All `potentialAction` URL templates MUST use the `https://` scheme. AI agents MUST reject any action target that uses plain `http://`.
+- **No auto-execution.** AI agents MUST NOT automatically execute actions without explicit user consent. Every action invocation requires the user to review the action description and confirm.
+- **Rate limiting.** Publishers SHOULD implement rate limiting on action endpoints to prevent abuse from automated agents.
+- **No credentials in URLs.** URL templates MUST NOT contain API keys, tokens, passwords, or session identifiers. If an action requires authentication, it should be handled through a separate authentication flow, not through URL parameters.
+
+### 10.5 Content Signature Considerations
+
+Content signatures in AQA V1.1 provide integrity verification, not authentication.
+
+- **No PKI.** V1.1 does not include a public key infrastructure. Signatures prove that content matches a declared hash, but do not cryptographically bind the hash to a specific publisher identity. Future versions may add public key references to enable publisher authentication.
+- **Stale signatures.** The `signedAt` datetime allows consumers to detect how old a signature is. A signature computed months ago on content that has since been modified (but not re-signed) indicates a maintenance gap.
+- **Hash algorithm strength.** SHA-256 is the minimum recommended algorithm. Publishers handling highly sensitive content SHOULD consider SHA-384 or SHA-512.
+
+### 10.6 Dynamic Endpoint Security
+
+Dynamic endpoints expose real-time API surfaces. Implementers MUST observe the following requirements:
+
+- **HTTPS mandatory.** The `url` property MUST use the `https://` scheme.
+- **Public data only.** Dynamic endpoints MUST NOT require authentication. They are designed for publicly available data (prices, rates, status). Sensitive or personalized data MUST NOT be served through dynamic endpoints.
+- **Rate limiting and CORS.** Publishers SHOULD implement rate limiting to prevent excessive queries and appropriate CORS headers to control cross-origin access.
+- **Cache respect.** AI systems SHOULD respect the declared `cacheTTL` to avoid generating excessive traffic. Ignoring `cacheTTL` and polling an endpoint every second constitutes abusive behavior analogous to a DDoS attack.
+
 ---
 
 ## Appendix A: Complete JSON-LD Template
@@ -864,6 +1331,15 @@ Changelog descriptions should summarize changes factually. Avoid including:
       "sourceType": "regulatory"
     }
   ],
+  "aiUsagePolicy": {
+    "@type": "AIUsagePolicy",
+    "ragCitation": "allow-with-attribution",
+    "modelTraining": "disallow",
+    "summarization": "allow",
+    "directQuote": "allow-with-attribution",
+    "commercialUse": "allow",
+    "contentExpiry": "YOUR_EXPIRY_DATE"
+  },
   "mainEntity": {
     "@type": "FAQPage",
     "mainEntity": [
@@ -898,7 +1374,44 @@ Changelog descriptions should summarize changes factually. Avoid including:
             "changeSourceUrl": "SOURCE_URL",
             "changeVersionNote": "1.0"
           }
-        ]
+        ],
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "YOUR_API_URL?q={query}",
+            "httpMethod": "GET"
+          },
+          "description": "YOUR_ACTION_DESCRIPTION"
+        },
+        "contentSignature": {
+          "@type": "ContentSignature",
+          "hashAlgorithm": "sha256",
+          "hashValue": "YOUR_SHA256_HASH",
+          "signedFields": ["acceptedAnswer.text"],
+          "signedAt": "YOUR_SIGN_DATETIME"
+        },
+        "ragSummary": "YOUR_RAG_OPTIMIZED_SUMMARY_MAX_300_CHARS",
+        "audienceAnswers": [
+          {
+            "@type": "AudienceAnswer",
+            "audience": "beginner",
+            "text": "YOUR_BEGINNER_ANSWER"
+          },
+          {
+            "@type": "AudienceAnswer",
+            "audience": "expert",
+            "text": "YOUR_EXPERT_ANSWER"
+          }
+        ],
+        "dynamicEndpoint": {
+          "@type": "DynamicEndpoint",
+          "url": "YOUR_API_ENDPOINT",
+          "httpMethod": "GET",
+          "responseFormat": "application/json",
+          "cacheTTL": 3600,
+          "fallbackText": "YOUR_STATIC_FALLBACK"
+        }
       }
     ]
   }
@@ -934,4 +1447,4 @@ NAF codes extend NACE with a letter suffix. Example: NACE 69.20 -> NAF 69.20Z.
 
 ---
 
-*AQA Specification v1.0.0-draft -- (c) 2026 AI Labs Solutions -- MIT License*
+*AQA Specification v1.1.0-draft -- (c) 2026 AI Labs Solutions -- MIT License*

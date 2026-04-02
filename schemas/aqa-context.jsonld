@@ -56,6 +56,85 @@
       "@id": "aqa:sectorLabel",
       "@type": "schema:Text"
     },
+
+    "aiUsagePolicy": {
+      "@id": "aqa:aiUsagePolicy"
+    },
+    "ragCitation": {
+      "@id": "aqa:ragCitation",
+      "@type": "schema:Text"
+    },
+    "modelTraining": {
+      "@id": "aqa:modelTraining",
+      "@type": "schema:Text"
+    },
+    "summarization": {
+      "@id": "aqa:summarization",
+      "@type": "schema:Text"
+    },
+    "directQuote": {
+      "@id": "aqa:directQuote",
+      "@type": "schema:Text"
+    },
+    "commercialUse": {
+      "@id": "aqa:commercialUse",
+      "@type": "schema:Text"
+    },
+    "contentExpiry": {
+      "@id": "aqa:contentExpiry",
+      "@type": "schema:Date"
+    },
+
+    "contentSignature": {
+      "@id": "aqa:contentSignature"
+    },
+    "hashAlgorithm": {
+      "@id": "aqa:hashAlgorithm",
+      "@type": "schema:Text"
+    },
+    "hashValue": {
+      "@id": "aqa:hashValue",
+      "@type": "schema:Text"
+    },
+    "signedFields": {
+      "@id": "aqa:signedFields",
+      "@container": "@list"
+    },
+    "signedAt": {
+      "@id": "aqa:signedAt",
+      "@type": "schema:DateTime"
+    },
+
+    "ragSummary": {
+      "@id": "aqa:ragSummary",
+      "@type": "schema:Text"
+    },
+
+    "audienceAnswers": {
+      "@id": "aqa:audienceAnswers",
+      "@container": "@list"
+    },
+    "audience": {
+      "@id": "aqa:audience",
+      "@type": "schema:Text"
+    },
+
+    "dynamicEndpoint": {
+      "@id": "aqa:dynamicEndpoint"
+    },
+    "responseFormat": {
+      "@id": "aqa:responseFormat",
+      "@type": "schema:Text"
+    },
+    "cacheTTL": {
+      "@id": "aqa:cacheTTL",
+      "@type": "schema:Integer"
+    },
+    "fallbackText": {
+      "@id": "aqa:fallbackText",
+      "@type": "schema:Text"
+    },
+
     "ChangelogEntry": {
       "@id": "aqa:ChangelogEntry"
     },
@@ -64,6 +143,18 @@
     },
     "SectorClassification": {
       "@id": "aqa:SectorClassification"
+    },
+    "AIUsagePolicy": {
+      "@id": "aqa:AIUsagePolicy"
+    },
+    "ContentSignature": {
+      "@id": "aqa:ContentSignature"
+    },
+    "AudienceAnswer": {
+      "@id": "aqa:AudienceAnswer"
+    },
+    "DynamicEndpoint": {
+      "@id": "aqa:DynamicEndpoint"
     }
   }
 }
