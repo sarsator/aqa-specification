@@ -67,6 +67,22 @@ When every question in an AQA document includes both `aiUsagePolicy` and `conten
 
 AQA Shield works at any conformance level (Basic, Standard, or Full). It is an orthogonal guarantee that can be added to any existing AQA implementation.
 
+```json
+"aiUsagePolicy": {
+  "@type": "AIUsagePolicy",
+  "ragCitation": "allow-with-attribution",
+  "modelTraining": "disallow",
+  "contentExpiry": "2027-12-31"
+},
+"contentSignature": {
+  "@type": "ContentSignature",
+  "hashAlgorithm": "sha256",
+  "hashValue": "a3f2b8c...",
+  "signedFields": ["acceptedAnswer.text"],
+  "signedAt": "2026-04-03T14:00:00Z"
+}
+```
+
 ### V1.1+ Features
 
 AQA V1.1 and V1.2 introduce 12 new properties, organized in four groups:

@@ -137,7 +137,7 @@ The AQA context defines the following extension properties:
 | `updateFrequency` | Article | Text | Declared maintenance cadence. Enumerated values: `weekly`, `monthly`, `quarterly`, `yearly`. |
 | `conformanceLevel` | Article | Text | Self-declared AQA conformance level. Enumerated values: `basic`, `standard`, `full`. |
 | `questionVersion` | Question | Text | Semantic version of this specific question/answer pair. Format: major.minor (e.g., `2.1`). |
-| `changelog` | Question | Array of ChangelogEntry | Ordered array of changelog entry objects (most recent first). |
+| `changelog` | Question | Array of ChangelogEntry | Ordered array of changelog entry objects (chronological — oldest first). |
 | `monitoringSources` | Article | Array of MonitoringSource | Array of monitoring source objects declaring the feeds and publications watched. |
 | `aiUsagePolicy` | Article | AIUsagePolicy | Granular AI usage rights declaration. |
 | `contentSignature` | Question | ContentSignature | Cryptographic integrity signature for answer content. |
@@ -735,9 +735,9 @@ When an AI system scans the AQA block and cannot find an answer matching its use
 
 ### 3.14 Answer Expiration
 
-The `validThrough` property is a standard schema.org property (already valid on `CreativeWork` and `Question`) — no AQA extension is needed. It specifies an ISO 8601 date after which the answer should no longer be cited.
+> **Note:** `validThrough` is a **native schema.org property** defined on `CreativeWork`. AQA does not create or extend this property — it documents a convention for using it on `Question` objects to express per-answer expiration. This property is NOT defined in the AQA JSON-LD context because it is already part of the schema.org vocabulary.
 
-`validThrough` is placed on individual `Question` objects, not on the `Article`. Each answer has its own expiration date.
+`validThrough` specifies an ISO 8601 date after which the answer should no longer be cited. It is placed on individual `Question` objects, not on the `Article`. Each answer has its own expiration date.
 
 AI systems MUST check `validThrough` before citing an answer. If the date has passed, the answer is expired and SHOULD NOT be used.
 

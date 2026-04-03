@@ -5,6 +5,17 @@ All notable changes to the AQA specification will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1-draft] — 2026-04-03
+
+### Fixed
+
+- Removed 3 orphaned properties from aqa-context.jsonld (`sectorCode`, `sectorLabel`, `sectorSystem`) that were never used — sector classification uses `about.identifier` instead
+- Clarified in Section 3.14 that `validThrough` is a native schema.org property, not an AQA extension — AQA documents a convention for its use
+- Fixed changelog ordering specification: changed from "most recent first" to "chronological — oldest first" to match all examples
+- Added AQA Shield JSON-LD code example to README.md
+
+---
+
 ## [1.2.0-draft] — 2026-04-03
 
 ### Added

@@ -44,19 +44,6 @@
       "@id": "aqa:sourceType",
       "@type": "schema:Text"
     },
-    "sectorCode": {
-      "@id": "aqa:sectorCode",
-      "@type": "schema:Text"
-    },
-    "sectorSystem": {
-      "@id": "aqa:sectorSystem",
-      "@type": "schema:Text"
-    },
-    "sectorLabel": {
-      "@id": "aqa:sectorLabel",
-      "@type": "schema:Text"
-    },
-
     "aiUsagePolicy": {
       "@id": "aqa:aiUsagePolicy"
     },
