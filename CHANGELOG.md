@@ -5,6 +5,17 @@ All notable changes to the AQA specification will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2-draft] — 2026-04-03
+
+### Added
+
+- New example: `examples/full/saas-compliance-us.jsonld` — English-language Full+Shield example (US SaaS, SOC 2, GDPR, CCPA/CPRA) with all V1.2 features
+- Migration guide Step 7: V1.2 distribution features (specVersion, updateFeedUrl, pingbackEndpoints, Hub)
+- GitHub Releases for all versions (v1.0.0, v1.1.0, v1.2.0, v1.2.1)
+- GitHub topics: schema-org, structured-data, faq, ai, geo, seo, json-ld, open-standard, rag, llm
+
+---
+
 ## [1.2.1-draft] — 2026-04-03
 
 ### Fixed

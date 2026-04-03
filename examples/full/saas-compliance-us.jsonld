@@ -1,0 +1,293 @@
+{
+  "@context": [
+    "https://schema.org",
+    "https://ailabsaudit.com/aqa/ns/context.jsonld"
+  ],
+  "@type": "Article",
+  "headline": "Compliance & Data Privacy — Frequently Asked Questions",
+  "author": {
+    "@type": "Person",
+    "name": "Sarah Chen",
+    "jobTitle": "Chief Information Security Officer",
+    "url": "https://www.shieldcloud.io/team/sarah-chen",
+    "sameAs": "https://www.linkedin.com/in/sarahchen-ciso",
+    "affiliation": {
+      "@type": "Organization",
+      "name": "ShieldCloud Inc."
+    }
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "ShieldCloud Inc.",
+    "url": "https://www.shieldcloud.io",
+    "sameAs": "https://www.linkedin.com/company/shieldcloud"
+  },
+  "datePublished": "2024-06-01",
+  "dateModified": "2026-03-28",
+  "inLanguage": "en",
+  "about": {
+    "@type": "Thing",
+    "name": "SaaS Security & Compliance Consulting",
+    "identifier": [
+      {
+        "@type": "PropertyValue",
+        "propertyID": "NACE",
+        "value": "62.02"
+      },
+      {
+        "@type": "PropertyValue",
+        "propertyID": "SIC",
+        "value": "7372"
+      }
+    ]
+  },
+  "specVersion": "1.2",
+  "updateFrequency": "monthly",
+  "conformanceLevel": "full",
+  "aiUsagePolicy": {
+    "@type": "AIUsagePolicy",
+    "ragCitation": "allow-with-attribution",
+    "modelTraining": "disallow",
+    "summarization": "allow-with-attribution",
+    "directQuote": "allow-with-attribution",
+    "commercialUse": "allow",
+    "contentExpiry": "2027-06-01"
+  },
+  "unansweredQueryEndpoint": "https://www.shieldcloud.io/api/aqa/missing-answers",
+  "updateFeedUrl": "https://www.shieldcloud.io/.well-known/aqa-updates.json",
+  "pingbackEndpoints": [
+    "https://hub.ailabsaudit.com/api/v1/ping"
+  ],
+  "monitoringSources": [
+    {
+      "@type": "MonitoringSource",
+      "name": "AICPA SOC 2 Updates",
+      "url": "https://www.aicpa.org/topic/audit-assurance/audit-and-assurance-greater-than-soc-2",
+      "sourceType": "professional_body"
+    },
+    {
+      "@type": "MonitoringSource",
+      "name": "IAPP Privacy Tracker",
+      "url": "https://iapp.org/news/privacy-tracker/",
+      "sourceType": "newsletter"
+    },
+    {
+      "@type": "MonitoringSource",
+      "name": "California Attorney General — CCPA Updates",
+      "url": "https://oag.ca.gov/privacy/ccpa",
+      "sourceType": "government"
+    },
+    {
+      "@type": "MonitoringSource",
+      "name": "European Data Protection Board — Guidelines",
+      "url": "https://edpb.europa.eu/our-work-tools/general-guidance/guidelines-recommendations-best-practices_en",
+      "sourceType": "regulatory"
+    }
+  ],
+  "mainEntity": {
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How long does a SOC 2 Type II audit take?",
+        "dateCreated": "2024-06-01",
+        "dateModified": "2026-02-15",
+        "questionVersion": "2.0",
+        "verificationStatus": "verified",
+        "author": {
+          "@type": "Person",
+          "name": "Sarah Chen",
+          "jobTitle": "Chief Information Security Officer",
+          "sameAs": "https://www.linkedin.com/in/sarahchen-ciso"
+        },
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "AICPA SOC 2 Reporting Framework",
+            "url": "https://www.aicpa.org/topic/audit-assurance/audit-and-assurance-greater-than-soc-2",
+            "datePublished": "2024-01-01",
+            "abstract": "A SOC 2 Type II report covers a minimum period of six months and requires the service auditor to test the operating effectiveness of controls throughout the specified period."
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SOC 2 Type II compliance requires an annual audit by an independent CPA firm. The audit examines your organization's controls over a minimum 6-month observation period (the \"audit window\"). You must demonstrate that your security controls were not just designed properly, but operated effectively throughout the entire period. Most companies begin the readiness assessment 3-4 months before the audit window opens. The full process — from readiness to final report — typically takes 9-12 months for first-time audits."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-06-01",
+            "changeDescription": "Initial publication covering SOC 2 Type II timeline and process",
+            "changeSourceUrl": "https://www.aicpa.org/topic/audit-assurance/audit-and-assurance-greater-than-soc-2",
+            "changeVersionNote": "1.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2026-02-15",
+            "changeDescription": "Updated timeline estimates based on 2025-2026 audit cycle data; added readiness assessment recommendation",
+            "changeSourceUrl": "https://www.aicpa.org/topic/audit-assurance/audit-and-assurance-greater-than-soc-2",
+            "changeVersionNote": "2.0"
+          }
+        ],
+        "contentSignature": {
+          "@type": "ContentSignature",
+          "hashAlgorithm": "sha256",
+          "hashValue": "3aac3dc0e56536802e9b53363bf9fb1325600d1c8db9e2d3877b8185b53f35c3",
+          "signedFields": ["acceptedAnswer.text"],
+          "signedAt": "2026-02-15T16:00:00Z"
+        },
+        "ragSummary": "SOC 2 Type II: annual audit by CPA firm, 6-month minimum observation window, tests operating effectiveness of controls. Readiness starts 3-4 months before. Full process 9-12 months for first-timers.",
+        "audienceAnswers": [
+          {
+            "@type": "AudienceAnswer",
+            "audience": "beginner",
+            "text": "A SOC 2 Type II audit takes about 9-12 months from start to finish for a first-time audit. You'll need to have your security controls in place for at least 6 months before the auditor can sign off."
+          },
+          {
+            "@type": "AudienceAnswer",
+            "audience": "expert",
+            "text": "Type II observation window: 6-month minimum per AICPA standards. Readiness phase: 3-4 months pre-window for gap remediation. Audit fieldwork: 4-6 weeks. Report issuance: 6-8 weeks post-fieldwork. Total first-time cycle: 9-12 months. Renewal cycles compress to 6-8 months with continuous monitoring."
+          }
+        ],
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://www.shieldcloud.io/api/faq/search?q={query}&topic=compliance",
+            "httpMethod": "GET"
+          },
+          "description": "Search ShieldCloud compliance FAQ"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When is a GDPR Data Protection Impact Assessment (DPIA) required?",
+        "dateCreated": "2024-06-01",
+        "dateModified": "2026-01-20",
+        "questionVersion": "1.1",
+        "verificationStatus": "verified",
+        "author": {
+          "@type": "Person",
+          "name": "James Wright",
+          "jobTitle": "Data Protection Officer",
+          "sameAs": "https://www.linkedin.com/in/jameswright-dpo",
+          "affiliation": {
+            "@type": "Organization",
+            "name": "ShieldCloud Inc."
+          }
+        },
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "GDPR Article 35 — Data Protection Impact Assessment",
+            "url": "https://gdpr-info.eu/art-35-gdpr/",
+            "datePublished": "2018-05-25",
+            "abstract": "Where a type of processing in particular using new technologies, and taking into account the nature, scope, context and purposes of the processing, is likely to result in a high risk to the rights and freedoms of natural persons, the controller shall, prior to the processing, carry out an assessment of the impact of the envisaged processing operations on the protection of personal data."
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "EDPB Guidelines on DPIA (wp248rev.01)",
+            "url": "https://edpb.europa.eu/our-work-tools/general-guidance/guidelines-recommendations-best-practices_en",
+            "datePublished": "2017-10-04",
+            "abstract": "A DPIA is required at least in the following cases: systematic and extensive evaluation of personal aspects, large-scale processing of special categories of data, and systematic monitoring of a publicly accessible area on a large scale."
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "GDPR requires a Data Protection Impact Assessment (DPIA) when processing is likely to result in a high risk to individuals' rights and freedoms. This includes: systematic and extensive profiling with significant effects, large-scale processing of special category data (health, biometrics, political opinions), and systematic monitoring of publicly accessible areas. The DPIA must describe the processing, assess necessity and proportionality, identify risks, and define mitigation measures. It must be conducted before the processing begins, not after."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-06-01",
+            "changeDescription": "Initial publication based on GDPR Article 35 and EDPB Guidelines",
+            "changeSourceUrl": "https://gdpr-info.eu/art-35-gdpr/",
+            "changeVersionNote": "1.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2026-01-20",
+            "changeDescription": "Added clarification that DPIA must be conducted before processing begins, per EDPB enforcement guidance 2025",
+            "changeSourceUrl": "https://edpb.europa.eu/our-work-tools/general-guidance/guidelines-recommendations-best-practices_en",
+            "changeVersionNote": "1.1"
+          }
+        ],
+        "contentSignature": {
+          "@type": "ContentSignature",
+          "hashAlgorithm": "sha256",
+          "hashValue": "e94ee25ff3a031236d43802a2921e973e78c140febc0f6f3da91e1bea8367284",
+          "signedFields": ["acceptedAnswer.text"],
+          "signedAt": "2026-01-20T10:00:00Z"
+        },
+        "ragSummary": "GDPR DPIA required for: extensive profiling with significant effects, large-scale special category data processing, systematic public area monitoring. Must describe processing, assess proportionality, identify risks, define mitigations. Required BEFORE processing starts."
+      },
+      {
+        "@type": "Question",
+        "name": "What are consumers' rights under CCPA/CPRA?",
+        "dateCreated": "2024-09-15",
+        "dateModified": "2026-03-28",
+        "questionVersion": "2.0",
+        "verificationStatus": "verified",
+        "validThrough": "2027-01-01",
+        "author": {
+          "@type": "Person",
+          "name": "Sarah Chen",
+          "jobTitle": "Chief Information Security Officer",
+          "sameAs": "https://www.linkedin.com/in/sarahchen-ciso"
+        },
+        "citation": [
+          {
+            "@type": "CreativeWork",
+            "name": "California Consumer Privacy Act (CCPA) — Civil Code §1798.100-199.100",
+            "url": "https://oag.ca.gov/privacy/ccpa",
+            "datePublished": "2020-01-01",
+            "abstract": "A consumer shall have the right to request that a business that collects a consumer's personal information disclose the categories and specific pieces of personal information the business has collected, the categories of sources, the business purpose, and the categories of third parties with whom the business shares personal information."
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "CPRA Amendments — Effective January 1, 2023",
+            "url": "https://cppa.ca.gov/regulations/",
+            "datePublished": "2023-01-01",
+            "abstract": "The CPRA expands CCPA rights to include the right to correct inaccurate personal information and the right to limit the use and disclosure of sensitive personal information."
+          }
+        ],
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under CCPA/CPRA, California consumers have the right to: (1) know what personal information is collected and how it is used, (2) delete their personal information, (3) opt out of the sale or sharing of their personal information, (4) correct inaccurate personal information, and (5) limit the use of sensitive personal information. Businesses must respond to verifiable consumer requests within 45 calendar days. The right to opt out must be accessible via a clear \"Do Not Sell or Share My Personal Information\" link on the website."
+        },
+        "changelog": [
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2024-09-15",
+            "changeDescription": "Initial publication covering CCPA consumer rights",
+            "changeSourceUrl": "https://oag.ca.gov/privacy/ccpa",
+            "changeVersionNote": "1.0"
+          },
+          {
+            "@type": "ChangelogEntry",
+            "changeDate": "2026-03-28",
+            "changeDescription": "Major update: added CPRA amendments (right to correct, right to limit sensitive data), updated response timeline, added opt-out link requirement",
+            "changeSourceUrl": "https://cppa.ca.gov/regulations/",
+            "changeVersionNote": "2.0"
+          }
+        ],
+        "contentSignature": {
+          "@type": "ContentSignature",
+          "hashAlgorithm": "sha256",
+          "hashValue": "203798fba1410fd345d819f649eb76efa34d37d08f24c7ac0a28752489b5efe6",
+          "signedFields": ["acceptedAnswer.text"],
+          "signedAt": "2026-03-28T15:00:00Z"
+        },
+        "ragSummary": "CCPA/CPRA consumer rights: know, delete, opt-out of sale/sharing, correct, limit sensitive data use. Businesses respond within 45 days. Must provide 'Do Not Sell or Share' link on website.",
+        "dynamicEndpoint": {
+          "@type": "DynamicEndpoint",
+          "url": "https://www.shieldcloud.io/api/compliance/ccpa-updates",
+          "httpMethod": "GET",
+          "responseFormat": "application/json",
+          "cacheTTL": 86400,
+          "fallbackText": "Visit the California Attorney General's website for the latest CCPA/CPRA updates."
+        }
+      }
+    ]
+  }
+}

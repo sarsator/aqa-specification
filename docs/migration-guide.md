@@ -302,7 +302,68 @@ AQA Shield is the minimum protection package for AI-ready content. Your site qua
 
 Together, these two properties give AI systems a machine-readable license and a way to verify that the content they cite has not been tampered with. AQA Shield does not require any specific conformance level -- you can add it to AQA Basic, Standard, or Full.
 
-## Step 7: Validate
+## Step 7: Add V1.2 Distribution Features (Optional)
+
+AQA V1.2 adds a distribution layer so AI systems can detect your content updates without re-crawling your entire site.
+
+### Spec Version
+
+Declare which version of the AQA specification you implement:
+
+```json
+"specVersion": "1.2"
+```
+
+Add this to the Article level. It helps crawlers know what properties to expect.
+
+### Update Feed
+
+Create a static JSON file at `/.well-known/aqa-updates.json` listing your recent AQA changes (last 30 days):
+
+```json
+{
+  "version": "1.2",
+  "publisher": "Your Company",
+  "lastUpdated": "2026-04-03T14:30:00Z",
+  "updates": [
+    {
+      "pageUrl": "https://www.yoursite.com/faq",
+      "questionName": "Your updated question?",
+      "previousVersion": "1.0",
+      "newVersion": "2.0",
+      "updateDate": "2026-04-03T14:30:00Z",
+      "changeDescription": "Updated per new regulation",
+      "isNewQuestion": false
+    }
+  ]
+}
+```
+
+Then point to it in your Article:
+
+```json
+"updateFeedUrl": "https://www.yoursite.com/.well-known/aqa-updates.json"
+```
+
+AI crawlers can poll this file (max once per hour) instead of re-crawling your pages.
+
+### Pingback Endpoints
+
+To proactively notify AI systems when you update content, declare endpoints:
+
+```json
+"pingbackEndpoints": [
+  "https://hub.ailabsaudit.com/api/v1/ping"
+]
+```
+
+Your CMS sends an HTTP POST to each endpoint with the update details. This is optional — the Update Feed alone is sufficient.
+
+### AQA Hub
+
+The AQA Hub aggregates updates from multiple publishers into a single feed for AI systems. You don't need to run a Hub — just send your updates to an existing one (like `hub.ailabsaudit.com`). The Hub protocol is open and documented in Section 3.17 of the specification.
+
+## Step 8: Validate
 
 ```bash
 python validators/validate.py your-page.html
