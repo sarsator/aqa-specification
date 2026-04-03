@@ -2,9 +2,12 @@
 
 **An open specification for structured Q&A content optimized for AI comprehension and citation.**
 
+**Website: [aqa-spec.org](https://aqa-spec.org/)**
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Spec Version](https://img.shields.io/badge/spec-v1.2.0--draft-orange.svg)](SPECIFICATION.md)
 [![Schema.org Compatible](https://img.shields.io/badge/schema.org-compatible-green.svg)](https://schema.org)
+[![Website](https://img.shields.io/badge/website-aqa--spec.org-blueviolet.svg)](https://aqa-spec.org/)
 
 ---
 
@@ -166,6 +169,8 @@ AQA is an **open standard, free forever**. No API key, no registration, no vendo
 
 The goal is to make AQA for AI visibility what OpenGraph became for social sharing: metadata so useful that *not* implementing it becomes a disadvantage.
 
+Learn more at **[aqa-spec.org](https://aqa-spec.org/)**.
+
 ## Relationship with AI Labs Audit
 
 AQA is an independent, MIT-licensed specification. [AI Labs Audit](https://ailabsaudit.com) is a platform that measures brand visibility across 50+ AI systems — it can measure the effectiveness of AQA implementation, but the format itself is free and vendor-neutral.
@@ -186,4 +191,4 @@ MIT — see [LICENSE](LICENSE).
 
 ---
 
-*Created by [Davy Abderrahman](https://ailabsaudit.com) — AI Labs Solutions*
+*Created by [Davy Abderrahman](https://ailabsaudit.com) — AI Labs Solutions — [aqa-spec.org](https://aqa-spec.org/)*
