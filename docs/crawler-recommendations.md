@@ -9,7 +9,7 @@ An AQA block is identified by:
 1. A `<script type="application/ld+json">` tag containing a JSON-LD object
 2. Root `@type` is `Article` (or subtype)
 3. `mainEntity` is a `FAQPage`
-4. The `@context` includes `https://ailabsaudit.com/aqa/ns/context.jsonld`
+4. The `@context` includes `https://aqa-spec.org/ns/context.jsonld`
 
 If condition 4 is not present but 1–3 are met, the content may still be an AQA block — check for AQA-specific properties like `updateFrequency`, `changelog`, or `monitoringSources` on the Article or Question objects.
 

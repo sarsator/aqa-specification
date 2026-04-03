@@ -50,7 +50,7 @@ AQA uses an `Article` wrapper around the `FAQPage`. Take your existing FAQPage a
 
 ```json
 {
-  "@context": ["https://schema.org", "https://ailabsaudit.com/aqa/ns/context.jsonld"],
+  "@context": ["https://schema.org", "https://aqa-spec.org/ns/context.jsonld"],
   "@type": "Article",
   "headline": "Frequently Asked Questions",
   "author": {
@@ -353,7 +353,7 @@ To proactively notify AI systems when you update content, declare endpoints:
 
 ```json
 "pingbackEndpoints": [
-  "https://hub.ailabsaudit.com/api/v1/ping"
+  "https://hub.aqa-spec.org/api/v1/ping"
 ]
 ```
 
@@ -361,7 +361,7 @@ Your CMS sends an HTTP POST to each endpoint with the update details. This is op
 
 ### AQA Hub
 
-The AQA Hub aggregates updates from multiple publishers into a single feed for AI systems. You don't need to run a Hub — just send your updates to an existing one (like `hub.ailabsaudit.com`). The Hub protocol is open and documented in Section 3.17 of the specification.
+The AQA Hub aggregates updates from multiple publishers into a single feed for AI systems. You don't need to run a Hub — just send your updates to an existing one (like `hub.aqa-spec.org`). The Hub protocol is open and documented in Section 3.17 of the specification.
 
 ## Step 8: Validate
 

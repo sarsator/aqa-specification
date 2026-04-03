@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ailabsaudit.com/aqa/schema/v1.2.0/aqa-schema.json",
+  "$id": "https://aqa-spec.org/schema/v1.2.0/aqa-schema.json",
   "title": "AQA Block Schema",
   "description": "JSON Schema for validating AQA (AI Question Answer) structured data blocks. V1.1 adds AI Usage Policy, Agentic Actions, Content Signature, RAG Summary, Multi-Persona Answers, and Dynamic Endpoints.",
   "type": "object",

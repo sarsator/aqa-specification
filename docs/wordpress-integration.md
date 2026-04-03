@@ -12,7 +12,7 @@ function aqa_structured_data() {
     if (!is_page('faq')) return;
 
     $aqa = [
-        '@context' => ['https://schema.org', 'https://ailabsaudit.com/aqa/ns/context.jsonld'],
+        '@context' => ['https://schema.org', 'https://aqa-spec.org/ns/context.jsonld'],
         '@type' => 'Article',
         'headline' => get_the_title(),
         'author' => [
@@ -114,7 +114,7 @@ function aqa_from_acf() {
     if (empty($questions)) return;
 
     $aqa = [
-        '@context' => ['https://schema.org', 'https://ailabsaudit.com/aqa/ns/context.jsonld'],
+        '@context' => ['https://schema.org', 'https://aqa-spec.org/ns/context.jsonld'],
         '@type' => 'Article',
         'headline' => get_the_title(),
         'author' => ['@type' => 'Organization', 'name' => get_bloginfo('name'), 'url' => home_url()],

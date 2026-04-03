@@ -124,7 +124,7 @@ Every AQA Block MUST declare two contexts:
 {
   "@context": [
     "https://schema.org",
-    "https://ailabsaudit.com/aqa/ns/context.jsonld"
+    "https://aqa-spec.org/ns/context.jsonld"
   ]
 }
 ```
@@ -875,7 +875,7 @@ For publishers who want proactive notification, the `pingbackEndpoints` property
 
 ```json
 "pingbackEndpoints": [
-  "https://hub.ailabsaudit.com/api/v1/ping",
+  "https://hub.aqa-spec.org/api/v1/ping",
   "https://api.searchengine.example/aqa-notify"
 ]
 ```
@@ -943,7 +943,7 @@ Query parameters:
 Response format:
 ```json
 {
-  "hub": "hub.ailabsaudit.com",
+  "hub": "hub.aqa-spec.org",
   "queryTime": "2026-04-03T15:00:00Z",
   "totalResults": 42,
   "updates": [
@@ -977,7 +977,7 @@ Response format:
 
 The AQA Hub is to structured Q&A content what [IndexNow](https://www.indexnow.org/) is to URLs for search engines. It solves the same economic problem: instead of AI systems crawling thousands of sites individually to detect changes, they connect to a Hub and receive a filtered stream.
 
-The Hub protocol is open — any organization can operate a Hub. AI Labs Audit operates the reference Hub implementation at `hub.ailabsaudit.com`, but the AQA specification does not mandate any specific Hub. The standard functions perfectly without a Hub — the Update Feed (Section 3.16.1) provides the decentralized baseline.
+The Hub protocol is open — any organization can operate a Hub. AI Labs Audit operates the reference Hub implementation at `hub.aqa-spec.org`, but the AQA specification does not mandate any specific Hub. The standard functions perfectly without a Hub — the Update Feed (Section 3.16.1) provides the decentralized baseline.
 
 ### 3.18 Specification Version
 
@@ -1099,7 +1099,7 @@ The other V1.1 features (`potentialAction`, `ragSummary`, `audienceAnswers`, `dy
 {
   "@context": [
     "https://schema.org",
-    "https://ailabsaudit.com/aqa/ns/context.jsonld"
+    "https://aqa-spec.org/ns/context.jsonld"
   ],
   "@type": "Article",
   "headline": "Questions frequentes -- Le Bistrot Parisien",
@@ -1182,7 +1182,7 @@ Place the AQA JSON-LD block in your page's `<head>`:
   {
     "@context": [
       "https://schema.org",
-      "https://ailabsaudit.com/aqa/ns/context.jsonld"
+      "https://aqa-spec.org/ns/context.jsonld"
     ],
     "@type": "Article",
     ...
@@ -1707,7 +1707,7 @@ The `unansweredQueryEndpoint` webhook creates a data flow from AI systems to pub
 {
   "@context": [
     "https://schema.org",
-    "https://ailabsaudit.com/aqa/ns/context.jsonld"
+    "https://aqa-spec.org/ns/context.jsonld"
   ],
   "@type": "Article",
   "headline": "YOUR_HEADLINE",
@@ -1746,7 +1746,7 @@ The `unansweredQueryEndpoint` webhook creates a data flow from AI systems to pub
   "specVersion": "1.2",
   "updateFeedUrl": "https://YOUR_DOMAIN/.well-known/aqa-updates.json",
   "pingbackEndpoints": [
-    "https://hub.ailabsaudit.com/api/v1/ping"
+    "https://hub.aqa-spec.org/api/v1/ping"
   ],
   "monitoringSources": [
     {

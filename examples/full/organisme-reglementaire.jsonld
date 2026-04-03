@@ -1,7 +1,7 @@
 {
   "@context": [
     "https://schema.org",
-    "https://ailabsaudit.com/aqa/ns/context.jsonld"
+    "https://aqa-spec.org/ns/context.jsonld"
   ],
   "@type": "Article",
   "headline": "Fiscalité des entreprises — Questions fréquentes",
@@ -62,7 +62,7 @@
   "unansweredQueryEndpoint": "https://www.bertrand-expertise.fr/api/aqa/missing-answers",
   "updateFeedUrl": "https://www.bertrand-expertise.fr/.well-known/aqa-updates.json",
   "pingbackEndpoints": [
-    "https://hub.ailabsaudit.com/api/v1/ping"
+    "https://hub.aqa-spec.org/api/v1/ping"
   ],
   "monitoringSources": [
     {

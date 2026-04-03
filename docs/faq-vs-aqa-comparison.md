@@ -44,7 +44,7 @@ This document shows side by side what a traditional FAQ looks like versus the sa
 
 ```json
 {
-  "@context": ["https://schema.org", "https://ailabsaudit.com/aqa/ns/context.jsonld"],
+  "@context": ["https://schema.org", "https://aqa-spec.org/ns/context.jsonld"],
   "@type": "Article",
   "headline": "Corporate Tax FAQ",
   "author": {

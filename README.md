@@ -104,7 +104,7 @@ Wrap your existing FAQ markup in an `Article` and add per-question dates and cit
 ```html
 <script type="application/ld+json">
 {
-  "@context": ["https://schema.org", "https://ailabsaudit.com/aqa/ns/context.jsonld"],
+  "@context": ["https://schema.org", "https://aqa-spec.org/ns/context.jsonld"],
   "@type": "Article",
   "headline": "Frequently Asked Questions",
   "author": {"@type": "Organization", "name": "Your Company"},

@@ -1,7 +1,7 @@
 {
   "@context": [
     "https://schema.org",
-    "https://ailabsaudit.com/aqa/ns/context.jsonld"
+    "https://aqa-spec.org/ns/context.jsonld"
   ],
   "@type": "Article",
   "headline": "Regulatory FAQ — Anti-Money Laundering Compliance",
@@ -56,7 +56,7 @@
   "unansweredQueryEndpoint": "https://www.alpinebank.eu/api/aqa/missing-answers",
   "updateFeedUrl": "https://www.alpinebank.eu/.well-known/aqa-updates.json",
   "pingbackEndpoints": [
-    "https://hub.ailabsaudit.com/api/v1/ping"
+    "https://hub.aqa-spec.org/api/v1/ping"
   ],
   "monitoringSources": [
     {
