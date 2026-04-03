@@ -178,7 +178,7 @@ def extract_from_url(url: str) -> list[dict]:
         raise ImportError("requests is required for URL fetching: pip install requests")
 
     resp = requests.get(url, timeout=30, headers={
-        "User-Agent": "AQA-Validator/1.0 (+https://github.com/ailabsaudit/aqa-specification)"
+        "User-Agent": "AQA-Validator/1.2 (+https://aqa-spec.org/)"
     })
     resp.raise_for_status()
 
