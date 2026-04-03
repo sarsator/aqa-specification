@@ -3,7 +3,7 @@
 **An open specification for structured Q&A content optimized for AI comprehension and citation.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Spec Version](https://img.shields.io/badge/spec-v1.1.0--draft-orange.svg)](SPECIFICATION.md)
+[![Spec Version](https://img.shields.io/badge/spec-v1.2.0--draft-orange.svg)](SPECIFICATION.md)
 [![Schema.org Compatible](https://img.shields.io/badge/schema.org-compatible-green.svg)](https://schema.org)
 
 ---
@@ -45,6 +45,10 @@ AQA is a **documented convention** for enriching Q&A structured data with the me
 | `unansweredQueryEndpoint` | Webhook: AI sends missing questions back to the publisher |
 | `validThrough` | Per-answer expiration date — AI stops citing after this date |
 | `verificationStatus` | verified / outdated / under-review status per answer |
+| `specVersion` | Declares which AQA spec version the block implements |
+| `updateFeedUrl` | Publisher's AQA Update Feed for change detection |
+| `pingbackEndpoints` | Push notifications to AI systems when content changes |
+| AQA Hub Protocol | Centralized aggregation of updates across publishers (like IndexNow for FAQ) |
 
 ### Three Conformance Levels
 
@@ -63,13 +67,14 @@ When every question in an AQA document includes both `aiUsagePolicy` and `conten
 
 AQA Shield works at any conformance level (Basic, Standard, or Full). It is an orthogonal guarantee that can be added to any existing AQA implementation.
 
-### V1.1 Features
+### V1.1+ Features
 
-AQA V1.1 introduces 9 new properties, organized in three groups:
+AQA V1.1 and V1.2 introduce 12 new properties, organized in four groups:
 
 - **Protection** — AI Usage Policy, Content Signature (together = AQA Shield)
 - **Enrichment** — RAG Summary, Multi-Persona Answers, Agentic Actions, Dynamic Endpoints
 - **Feedback** — Missing Answer Webhook, Answer Expiration, Verification Status
+- **Distribution** — Update Feed (`/.well-known/aqa-updates.json`), Pingback Endpoints, AQA Hub Protocol
 
 ## Quick Start
 
@@ -121,7 +126,7 @@ See the [Migration Guide](docs/migration-guide.md) to move from Basic to Standar
 ## Repository Structure
 
 ```
-├── SPECIFICATION.md          # Complete technical specification (V1.1)
+├── SPECIFICATION.md          # Complete technical specification (V1.2)
 ├── schemas/
 │   ├── aqa-context.jsonld    # JSON-LD context for AQA extensions
 │   └── aqa-schema.json       # JSON Schema for validation
@@ -135,7 +140,8 @@ See the [Migration Guide](docs/migration-guide.md) to move from Basic to Standar
     ├── migration-guide.md    # FAQ → AQA migration guide
     ├── wordpress-integration.md
     ├── faq-vs-aqa-comparison.md
-    └── crawler-recommendations.md
+    ├── crawler-recommendations.md
+    └── ecosystem-integration.md  # LangChain, LlamaIndex, WordPress, Hub
 ```
 
 ## Philosophy

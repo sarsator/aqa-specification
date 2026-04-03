@@ -5,6 +5,34 @@ All notable changes to the AQA specification will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0-draft] — 2026-04-03
+
+### Added
+
+Distribution:
+- Update Notification Protocol (Section 3.16) — Pull layer (`/.well-known/aqa-updates.json`) + Push layer (`pingbackEndpoints`)
+- AQA Hub Protocol (Section 3.17) — centralized update aggregation across publishers, REST API spec, strategic positioning as "IndexNow for FAQ"
+- `specVersion` property — declares which AQA spec version the block implements
+- `updateFeedUrl` property — explicit pointer to the publisher's AQA Update Feed
+- `pingbackEndpoints` property — array of URLs to notify when content changes
+
+Documentation:
+- New document: `docs/ecosystem-integration.md` — LangChain AQALoader, LlamaIndex AQAReader, WordPress plugin architecture, Hub integration
+- Sections 8.15-8.16: crawler recommendations for Update Feeds and Hub connectivity
+- Section 10.8: security considerations for Update Feed and Pingback
+
+### Changed
+
+- Specification version bumped to 1.2.0-draft
+- JSON-LD context extended with 3 new properties (specVersion, updateFeedUrl, pingbackEndpoints)
+- JSON Schema $id updated to v1.2.0
+- Python validator extended with V1.2 validation rules (V12-SV, V12-UF, V12-PB)
+- Full examples updated with specVersion, updateFeedUrl, and pingbackEndpoints
+- README updated with Distribution features group
+- All documentation synchronized
+
+---
+
 ## [1.1.0-draft] — 2026-04-03
 
 ### Added

@@ -49,6 +49,7 @@
   },
   "updateFrequency": "monthly",
   "conformanceLevel": "full",
+  "specVersion": "1.2",
   "aiUsagePolicy": {
     "@type": "AIUsagePolicy",
     "ragCitation": "allow-with-attribution",
@@ -59,6 +60,10 @@
     "contentExpiry": "2027-03-31"
   },
   "unansweredQueryEndpoint": "https://www.bertrand-expertise.fr/api/aqa/missing-answers",
+  "updateFeedUrl": "https://www.bertrand-expertise.fr/.well-known/aqa-updates.json",
+  "pingbackEndpoints": [
+    "https://hub.ailabsaudit.com/api/v1/ping"
+  ],
   "monitoringSources": [
     {
       "@type": "MonitoringSource",

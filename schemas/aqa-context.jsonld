@@ -139,6 +139,18 @@
       "@id": "aqa:unansweredQueryEndpoint",
       "@type": "schema:URL"
     },
+    "specVersion": {
+      "@id": "aqa:specVersion",
+      "@type": "schema:Text"
+    },
+    "updateFeedUrl": {
+      "@id": "aqa:updateFeedUrl",
+      "@type": "schema:URL"
+    },
+    "pingbackEndpoints": {
+      "@id": "aqa:pingbackEndpoints",
+      "@container": "@list"
+    },
 
     "validThrough": {
       "@id": "schema:validThrough",

@@ -43,6 +43,7 @@
   },
   "updateFrequency": "monthly",
   "conformanceLevel": "full",
+  "specVersion": "1.2",
   "aiUsagePolicy": {
     "@type": "AIUsagePolicy",
     "ragCitation": "allow-with-attribution",
@@ -53,6 +54,10 @@
     "contentExpiry": "2027-06-30"
   },
   "unansweredQueryEndpoint": "https://www.alpinebank.eu/api/aqa/missing-answers",
+  "updateFeedUrl": "https://www.alpinebank.eu/.well-known/aqa-updates.json",
+  "pingbackEndpoints": [
+    "https://hub.ailabsaudit.com/api/v1/ping"
+  ],
   "monitoringSources": [
     {
       "@type": "MonitoringSource",

@@ -1,6 +1,6 @@
 # AQA Specification — AI Question Answer
 
-**Version:** 1.1.0-draft  
+**Version:** 1.2.0-draft  
 **Date:** 2026-04-03  
 **Status:** Draft  
 **Authors:** Davy Abderrahman (AI Labs Solutions)  
@@ -28,6 +28,9 @@
    - 3.13 Unanswered Query Webhook
    - 3.14 Answer Expiration
    - 3.15 Verification Status
+   - 3.16 Update Notification Protocol
+   - 3.17 AQA Hub Protocol
+   - 3.18 Specification Version
 4. [Conformance Levels](#4-conformance-levels)
    - 4.1 AQA Basic
    - 4.2 AQA Standard
@@ -143,6 +146,9 @@ The AQA context defines the following extension properties:
 | `dynamicEndpoint` | Question | DynamicEndpoint | Real-time API endpoint for volatile data. |
 | `unansweredQueryEndpoint` | Article | URL | Webhook URL for missing answer feedback. |
 | `verificationStatus` | Question | Text | Current verification status of the answer. |
+| `specVersion` | Article | Text | Version of the AQA specification implemented (e.g., "1.2"). |
+| `updateFeedUrl` | Article | URL | URL of the publisher's AQA Update Feed. |
+| `pingbackEndpoints` | Article | Array of URL | Endpoints to notify when AQA content is updated. |
 
 And the following custom types:
 
@@ -175,6 +181,9 @@ The outer `Article` provides page-level metadata.
 | `monitoringSources` | Array | MUST | Full | Declared monitoring sources (direct AQA property) |
 | `aiUsagePolicy` | AIUsagePolicy | MAY | Any | AI usage rights declaration (direct AQA property, V1.1) |
 | `unansweredQueryEndpoint` | URL | MAY | Any | Webhook for missing answer feedback from AI systems (V1.1) |
+| `specVersion` | Text | SHOULD | Basic | AQA spec version implemented (e.g., "1.2") (V1.2) |
+| `updateFeedUrl` | URL | MAY | Any | URL of the AQA Update Feed (V1.2) |
+| `pingbackEndpoints` | Array | MAY | Any | IA notification endpoints for content updates (V1.2) |
 
 #### 3.3.1 Author Properties
 
@@ -811,6 +820,176 @@ When a new regulation drops but the publisher has not yet written the updated an
 }
 ```
 
+### 3.16 Update Notification Protocol
+
+The Update Notification Protocol provides two complementary mechanisms for publishers to signal content changes to AI systems. This is the inverse of `unansweredQueryEndpoint`: instead of AI telling the publisher what's missing, the publisher tells AI what's been updated.
+
+#### 3.16.1 AQA Update Feed (Pull Layer)
+
+Publishers SHOULD expose a static JSON file at the conventional URL `/.well-known/aqa-updates.json`. This file lists recent AQA content updates on the site.
+
+**Format:**
+
+```json
+{
+  "version": "1.2",
+  "publisher": "Cabinet Bertrand Expertise & Audit",
+  "lastUpdated": "2026-04-03T14:30:00Z",
+  "updates": [
+    {
+      "pageUrl": "https://www.bertrand-expertise.fr/faq-fiscalite",
+      "questionName": "Quel est le taux d'IS pour les PME ?",
+      "previousVersion": "2.0",
+      "newVersion": "3.0",
+      "updateDate": "2026-03-25T16:00:00Z",
+      "changeDescription": "Relèvement du plafond du taux réduit de 42 500€ à 50 000€ par la loi de finances 2026",
+      "isNewQuestion": false
+    },
+    {
+      "pageUrl": "https://www.bertrand-expertise.fr/faq-fiscalite",
+      "questionName": "Quelles sont les nouvelles obligations de facturation électronique ?",
+      "previousVersion": null,
+      "newVersion": "1.0",
+      "updateDate": "2025-09-01T10:00:00Z",
+      "changeDescription": "Nouvelle question ajoutée suite au calendrier définitif de la facturation électronique",
+      "isNewQuestion": true
+    }
+  ]
+}
+```
+
+**Requirements:**
+- The file MUST contain only updates from the last 30 days
+- The file MUST be served over HTTPS
+- The file SHOULD be updated whenever AQA content changes (ideally automated by the CMS)
+- AI crawlers can poll this file at their own pace — recommended: no more than once per hour
+
+**Why a well-known URL:** Like `robots.txt`, `sitemap.xml`, and `security.txt`, the `.well-known` convention allows AI systems to discover the update feed without any prior knowledge of the site's structure. No configuration, no registration, no API key — just check the URL.
+
+The `updateFeedUrl` property on the Article provides an explicit pointer to this file, but crawlers MAY also attempt the conventional `.well-known` path as a fallback.
+
+#### 3.16.2 AQA Pingback (Push Layer)
+
+For publishers who want proactive notification, the `pingbackEndpoints` property on the Article declares an array of URLs to receive HTTP POST notifications when content changes.
+
+```json
+"pingbackEndpoints": [
+  "https://hub.ailabsaudit.com/api/v1/ping",
+  "https://api.searchengine.example/aqa-notify"
+]
+```
+
+**Payload format (identical to an Update Feed entry):**
+
+```json
+{
+  "pageUrl": "https://www.bertrand-expertise.fr/faq-fiscalite",
+  "questionName": "Quel est le taux d'IS pour les PME ?",
+  "previousVersion": "2.0",
+  "newVersion": "3.0",
+  "updateDate": "2026-03-25T16:00:00Z",
+  "changeDescription": "Relèvement du plafond du taux réduit par la LF 2026",
+  "isNewQuestion": false
+}
+```
+
+**Requirements:**
+- Endpoints MUST use HTTPS
+- The publisher SHOULD send at most one ping per question updated per 24 hours
+- Payloads MUST NOT contain PII
+- The receiving endpoint SHOULD return 200 or 202 (accepted)
+- The Push layer is OPTIONAL — the Pull layer (Update Feed) is sufficient for conformance
+
+**Relationship between Pull and Push:** The Pull layer (Update Feed) is the baseline — it works without any cooperation from AI providers. The Push layer (Pingback) is an optimization for publishers who want immediate notification. Both can coexist.
+
+#### 3.16.3 Article-Level Properties
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `updateFeedUrl` | URL | MAY | Explicit URL of the AQA Update Feed. If absent, crawlers MAY try `/.well-known/aqa-updates.json`. |
+| `pingbackEndpoints` | Array of URL | MAY | Endpoints to receive HTTP POST when AQA content is updated. |
+
+### 3.17 AQA Hub Protocol
+
+An AQA Hub is a centralized intermediary that aggregates update notifications from multiple publishers and exposes a consolidated feed to AI systems. The Hub concept is documented here as a protocol — any party can operate a Hub.
+
+#### 3.17.1 Architecture
+
+```
+Publishers ──POST──> Hub ──REST/SSE──> AI Systems
+  (CMS plugin)        (aggregates)      (consume feed)
+```
+
+- **Publishers** send update notifications to the Hub (same payload as Pingback, Section 3.16.2)
+- **The Hub** aggregates, deduplicates, and indexes updates by country, sector, language, and date
+- **AI Systems** connect to the Hub and query or subscribe to filtered update streams
+
+#### 3.17.2 Hub API (Normative)
+
+Any implementation claiming to be an AQA Hub MUST expose the following REST endpoint:
+
+**`GET /api/v1/updates`**
+
+Query parameters:
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `since` | ISO 8601 datetime | Return updates after this timestamp. Required. |
+| `country` | ISO 3166-1 alpha-2 | Filter by country (e.g., `FR`, `US`). Optional. |
+| `sector` | NACE code | Filter by sector (e.g., `69.20`). Optional. |
+| `language` | BCP 47 tag | Filter by language (e.g., `fr`, `en`). Optional. |
+| `limit` | Integer | Maximum number of results (default: 100, max: 1000). Optional. |
+
+Response format:
+```json
+{
+  "hub": "hub.ailabsaudit.com",
+  "queryTime": "2026-04-03T15:00:00Z",
+  "totalResults": 42,
+  "updates": [
+    {
+      "publisher": "Cabinet Bertrand Expertise & Audit",
+      "publisherUrl": "https://www.bertrand-expertise.fr",
+      "pageUrl": "https://www.bertrand-expertise.fr/faq-fiscalite",
+      "questionName": "Quel est le taux d'IS pour les PME ?",
+      "newVersion": "3.0",
+      "updateDate": "2026-03-25T16:00:00Z",
+      "changeDescription": "Relèvement du plafond du taux réduit par la LF 2026",
+      "sector": "69.20",
+      "language": "fr",
+      "country": "FR"
+    }
+  ]
+}
+```
+
+**Hubs MAY also expose a real-time stream** via Server-Sent Events (SSE) or WebSocket at a documented endpoint, but this is not required for conformance.
+
+#### 3.17.3 Hub Requirements
+
+- Hubs MUST expose the REST API described in 3.17.2 over HTTPS
+- Hubs MUST NOT modify AQA content — they relay metadata only
+- Hubs MUST respect `aiUsagePolicy` of publishers (do not relay content from publishers who set `ragCitation: "disallow"`)
+- Hubs MUST NOT store or relay PII
+- Hubs SHOULD retain update history for at least 90 days
+
+#### 3.17.4 Strategic Positioning
+
+The AQA Hub is to structured Q&A content what [IndexNow](https://www.indexnow.org/) is to URLs for search engines. It solves the same economic problem: instead of AI systems crawling thousands of sites individually to detect changes, they connect to a Hub and receive a filtered stream.
+
+The Hub protocol is open — any organization can operate a Hub. AI Labs Audit operates the reference Hub implementation at `hub.ailabsaudit.com`, but the AQA specification does not mandate any specific Hub. The standard functions perfectly without a Hub — the Update Feed (Section 3.16.1) provides the decentralized baseline.
+
+### 3.18 Specification Version
+
+The `specVersion` property on the Article declares which version of the AQA specification the block implements. This allows AI crawlers to know what properties to expect and how to interpret them.
+
+```json
+"specVersion": "1.2"
+```
+
+- Format: `major.minor` (e.g., "1.0", "1.1", "1.2")
+- AI systems SHOULD check `specVersion` and adapt their parsing accordingly
+- If absent, crawlers SHOULD assume the latest version they support
+
 ---
 
 ## 4. Conformance Levels
@@ -892,6 +1071,9 @@ AQA defines three conformance levels, each building on the previous one.
 | Unanswered Query Webhook (V1.1, optional) | opt | opt | opt |
 | Answer Expiration (V1.1, optional) | opt | opt | opt |
 | Verification Status (V1.1, optional) | opt | opt | opt |
+| specVersion (V1.2) | SHOULD | SHOULD | SHOULD |
+| Update Feed (V1.2, optional) | opt | opt | opt |
+| Pingback (V1.2, optional) | opt | opt | opt |
 
 ### 4.5 AQA Shield
 
@@ -1244,6 +1426,8 @@ When ingesting an AQA block, extract the following fields into the chunk metadat
 | `aqa_valid_through` | `validThrough` on Question | Expiration date filter |
 | `aqa_verification_status` | `verificationStatus` on Question | Quality gate filter |
 | `aqa_has_webhook` | `unansweredQueryEndpoint` presence | Feedback capability flag |
+| `aqa_spec_version` | `specVersion` on Article | Compatibility check |
+| `aqa_update_feed_url` | `updateFeedUrl` on Article | Change detection endpoint |
 
 #### 8.5.4 Quality-Aware Retrieval
 
@@ -1390,6 +1574,36 @@ When `verificationStatus` is present on a Question, AI systems MUST adjust their
 
 If `verificationStatus` is absent, the AI system SHOULD treat the answer as having no declared status and apply its standard quality assessment logic.
 
+### 8.15 Processing Update Feeds
+
+AI crawlers SHOULD check for AQA Update Feeds to detect content changes efficiently.
+
+**Discovery:**
+1. Check the `updateFeedUrl` property in the AQA block
+2. If absent, attempt `https://{domain}/.well-known/aqa-updates.json`
+
+**Polling frequency:**
+- Recommended: once per hour maximum
+- Respect HTTP cache headers (`Cache-Control`, `ETag`, `Last-Modified`)
+- Use conditional requests (`If-Modified-Since`, `If-None-Match`) to minimize bandwidth
+
+**Processing:**
+- Compare `updateDate` with the crawler's last visit
+- For updates with `isNewQuestion: true`, fetch the page to index the new question
+- For version changes, re-fetch and re-embed the updated answer
+
+### 8.16 Connecting to AQA Hubs
+
+AI systems MAY connect to AQA Hubs for efficient change detection across multiple publishers.
+
+**Recommended workflow:**
+1. Query `GET /api/v1/updates?since={last_check}` periodically
+2. Filter by relevant sectors and languages for your use case
+3. For each update, re-fetch the source page and update the cached content
+4. If the Hub provides a real-time stream (SSE/WebSocket), prefer it over polling
+
+**Fallback:** If the Hub is unavailable, fall back to polling individual publishers' Update Feeds.
+
 ---
 
 ## 9. Extension Mechanism
@@ -1476,6 +1690,14 @@ The `unansweredQueryEndpoint` webhook creates a data flow from AI systems to pub
 - **Publishers MUST NOT attempt to correlate** webhook data with individual users. The webhook data represents aggregate demand signals, not individual user tracking.
 - **Webhook data should be used exclusively for content improvement** — identifying gaps in the FAQ coverage, prioritizing new content creation, and understanding what AI audiences need. Using webhook data for advertising targeting, user profiling, or any purpose other than content improvement violates the spirit of AQA.
 
+### 10.8 Update Feed and Pingback Security
+
+- Update Feed files and Pingback endpoints MUST use HTTPS
+- Payloads MUST NOT contain PII or answer content — only metadata (question name, version, URL, change description)
+- Publishers SHOULD implement rate limiting on Pingback sends (max 1 per question per 24h)
+- Hubs receiving Pingback POSTs SHOULD validate payload structure and reject malformed requests
+- Hubs MUST authenticate publishers before accepting updates (mechanism out of scope for V1.2, but TLS client certificates or API keys are recommended)
+
 ---
 
 ## Appendix A: Complete JSON-LD Template
@@ -1520,6 +1742,11 @@ The `unansweredQueryEndpoint` webhook creates a data flow from AI systems to pub
   },
   "updateFrequency": "monthly",
   "conformanceLevel": "full",
+  "specVersion": "1.2",
+  "updateFeedUrl": "https://YOUR_DOMAIN/.well-known/aqa-updates.json",
+  "pingbackEndpoints": [
+    "https://hub.ailabsaudit.com/api/v1/ping"
+  ],
   "monitoringSources": [
     {
       "@type": "MonitoringSource",
@@ -1644,4 +1871,4 @@ NAF codes extend NACE with a letter suffix. Example: NACE 69.20 -> NAF 69.20Z.
 
 ---
 
-*AQA Specification v1.1.0-draft -- (c) 2026 AI Labs Solutions -- MIT License*
+*AQA Specification v1.2.0-draft -- (c) 2026 AI Labs Solutions -- MIT License*

@@ -646,6 +646,41 @@ def validate_v11_features(block: dict, result: ValidationResult):
                                          "aiUsagePolicy.contentExpiry is in the past — "
                                          "content may be considered stale by AI systems")
 
+    # --- specVersion (Article level) ---
+    spec_ver = block.get("specVersion")
+    if spec_ver:
+        result.properties_present.append("specVersion")
+        if not isinstance(spec_ver, str) or not VERSION_RE.match(spec_ver):
+            result.add_issue(Severity.WARNING, "V12-SV-001",
+                             f"specVersion should be major.minor format, got: {spec_ver}")
+
+    # --- updateFeedUrl (Article level) ---
+    feed_url = block.get("updateFeedUrl")
+    if feed_url:
+        result.properties_present.append("updateFeedUrl")
+        if not isinstance(feed_url, str) or not is_url(feed_url):
+            result.add_issue(Severity.ERROR, "V12-UF-001",
+                             "updateFeedUrl must be a valid URL")
+        elif not feed_url.startswith("https://"):
+            result.add_issue(Severity.WARNING, "V12-UF-002",
+                             "updateFeedUrl should use HTTPS")
+
+    # --- pingbackEndpoints (Article level) ---
+    pingbacks = block.get("pingbackEndpoints")
+    if pingbacks:
+        result.properties_present.append("pingbackEndpoints")
+        if not isinstance(pingbacks, list):
+            result.add_issue(Severity.ERROR, "V12-PB-001",
+                             "pingbackEndpoints must be an array of URLs")
+        else:
+            for j, ep in enumerate(pingbacks):
+                if not isinstance(ep, str) or not is_url(ep):
+                    result.add_issue(Severity.ERROR, "V12-PB-002",
+                                     f"pingbackEndpoints[{j}] must be a valid URL")
+                elif not ep.startswith("https://"):
+                    result.add_issue(Severity.WARNING, "V12-PB-003",
+                                     f"pingbackEndpoints[{j}] should use HTTPS")
+
     # --- Unanswered Query Webhook (Article level) ---
     webhook = block.get("unansweredQueryEndpoint")
     if webhook:

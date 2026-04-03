@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://ailabsaudit.com/aqa/schema/v1.1.0/aqa-schema.json",
+  "$id": "https://ailabsaudit.com/aqa/schema/v1.2.0/aqa-schema.json",
   "title": "AQA Block Schema",
   "description": "JSON Schema for validating AQA (AI Question Answer) structured data blocks. V1.1 adds AI Usage Policy, Agentic Actions, Content Signature, RAG Summary, Multi-Persona Answers, and Dynamic Endpoints.",
   "type": "object",
@@ -57,6 +57,21 @@
       "type": "string",
       "format": "uri",
       "description": "V1.1: webhook URL for missing answer feedback from AI systems."
+    },
+    "specVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$",
+      "description": "V1.2: AQA spec version implemented (e.g., '1.2')."
+    },
+    "updateFeedUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "V1.2: URL of the publisher's AQA Update Feed."
+    },
+    "pingbackEndpoints": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" },
+      "description": "V1.2: endpoints to notify when AQA content is updated."
     },
     "mainEntity": { "$ref": "#/$defs/faqPage" }
   },
