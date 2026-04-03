@@ -56,7 +56,7 @@
   "unansweredQueryEndpoint": "https://www.alpinebank.eu/api/aqa/missing-answers",
   "updateFeedUrl": "https://www.alpinebank.eu/.well-known/aqa-updates.json",
   "pingbackEndpoints": [
-    "https://hub.aqa-spec.org/api/v1/ping"
+    "https://aqa-spec.org/hub/api/v1/ping"
   ],
   "monitoringSources": [
     {

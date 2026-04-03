@@ -875,7 +875,7 @@ For publishers who want proactive notification, the `pingbackEndpoints` property
 
 ```json
 "pingbackEndpoints": [
-  "https://hub.aqa-spec.org/api/v1/ping",
+  "https://aqa-spec.org/hub/api/v1/ping",
   "https://api.searchengine.example/aqa-notify"
 ]
 ```
@@ -943,7 +943,7 @@ Query parameters:
 Response format:
 ```json
 {
-  "hub": "hub.aqa-spec.org",
+  "hub": "aqa-spec.org/hub",
   "queryTime": "2026-04-03T15:00:00Z",
   "totalResults": 42,
   "updates": [
@@ -977,7 +977,7 @@ Response format:
 
 The AQA Hub is to structured Q&A content what [IndexNow](https://www.indexnow.org/) is to URLs for search engines. It solves the same economic problem: instead of AI systems crawling thousands of sites individually to detect changes, they connect to a Hub and receive a filtered stream.
 
-The Hub protocol is open — any organization can operate a Hub. AI Labs Audit operates the reference Hub implementation at `hub.aqa-spec.org`, but the AQA specification does not mandate any specific Hub. The standard functions perfectly without a Hub — the Update Feed (Section 3.16.1) provides the decentralized baseline.
+The Hub protocol is open — any organization can operate a Hub. AI Labs Audit operates the reference Hub implementation at `aqa-spec.org/hub`, but the AQA specification does not mandate any specific Hub. The standard functions perfectly without a Hub — the Update Feed (Section 3.16.1) provides the decentralized baseline.
 
 ### 3.18 Specification Version
 
@@ -1746,7 +1746,7 @@ The `unansweredQueryEndpoint` webhook creates a data flow from AI systems to pub
   "specVersion": "1.2",
   "updateFeedUrl": "https://YOUR_DOMAIN/.well-known/aqa-updates.json",
   "pingbackEndpoints": [
-    "https://hub.aqa-spec.org/api/v1/ping"
+    "https://aqa-spec.org/hub/api/v1/ping"
   ],
   "monitoringSources": [
     {

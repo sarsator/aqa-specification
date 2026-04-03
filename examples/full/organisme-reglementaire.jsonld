@@ -62,7 +62,7 @@
   "unansweredQueryEndpoint": "https://www.bertrand-expertise.fr/api/aqa/missing-answers",
   "updateFeedUrl": "https://www.bertrand-expertise.fr/.well-known/aqa-updates.json",
   "pingbackEndpoints": [
-    "https://hub.aqa-spec.org/api/v1/ping"
+    "https://aqa-spec.org/hub/api/v1/ping"
   ],
   "monitoringSources": [
     {
